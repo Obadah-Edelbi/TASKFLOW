@@ -1,0 +1,64 @@
+.auth-form {
+  max-width: 420px;
+  margin: 80px auto;
+  padding: 30px 25px;
+
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+
+  background: #ffffff;
+  border-radius: 12px;
+
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+}
+
+.auth-form h2 {
+  text-align: center;
+  margin-bottom: 10px;
+  font-weight: 600;
+  color: #333;
+}
+
+.full-width {
+  width: 100%;
+}
+
+button {
+  height: 44px;
+  font-weight: 600;
+  font-size: 15px;
+  margin-top: 10px;
+}
+
+/* Error text spacing fix */
+mat-error {
+  font-size: 12px;
+}
+
+/* Mobile responsive */
+@media (max-width: 480px) {
+  .auth-form {
+    margin: 40px 16px;
+    padding: 24px 20px;
+  }
+}
+.auth-form {
+  background: var(--card-bg);
+  color: var(--text-color);
+
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
+  animation: slideFade 0.6s ease;
+}
+.auth-link {
+  margin-top: 12px;
+  text-align: center;
+  font-size: 14px;
+
+  a {
+    margin-left: 6px;
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+  }
+}

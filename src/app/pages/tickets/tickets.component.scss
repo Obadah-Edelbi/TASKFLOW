@@ -1,0 +1,17 @@
+.ticket {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 12px;
+  margin-bottom: 10px;
+}
+
+.info h3 {
+  margin: 0 0 6px;
+}
+.info p {
+  margin: 0;
+  opacity: 0.8;
+}

@@ -1,0 +1,15 @@
+<mat-toolbar color="primary" class="nav">
+  <span class="brand" routerLink="/dashboard">Task Manager</span>
+
+  <span class="spacer"></span>
+
+  <button mat-button routerLink="/dashboard/tasks" routerLinkActive="active">
+    Tasks
+  </button>
+
+  <button mat-button routerLink="/dashboard/admin" routerLinkActive="active">
+    Admin
+  </button>
+
+  <button mat-stroked-button class="logout" (click)="logout()">Logout</button>
+</mat-toolbar>

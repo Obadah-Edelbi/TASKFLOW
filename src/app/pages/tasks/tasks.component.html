@@ -1,0 +1,213 @@
+<div class="wrap">
+  <!-- Overview header -->
+  <div class="hero">
+    <div class="hero-left">
+      <h1>Overview</h1>
+      <p>Manage and track your operational workflows efficiently.</p>
+    </div>
+
+    <button
+      class="btn-primary"
+      mat-flat-button
+      color="primary"
+      (click)="createTask()"
+    >
+      <mat-icon>add</mat-icon>
+      Create Task
+    </button>
+  </div>
+
+  <!-- Stats -->
+  <div class="stats">
+    <div class="stat">
+      <div class="ic blue">
+        <mat-icon>assignment</mat-icon>
+      </div>
+      <div class="meta">
+        <div class="num">{{ totalTasks }}</div>
+        <div class="label">TOTAL TASKS</div>
+      </div>
+    </div>
+
+    <div class="stat">
+      <div class="ic indigo">
+        <mat-icon>schedule</mat-icon>
+      </div>
+      <div class="meta">
+        <div class="num">{{ inProgressCount }}</div>
+        <div class="label">IN PROGRESS</div>
+      </div>
+    </div>
+
+    <div class="stat">
+      <div class="ic green">
+        <mat-icon>check_circle</mat-icon>
+      </div>
+      <div class="meta">
+        <div class="num">{{ completedCount }}</div>
+        <div class="label">COMPLETED</div>
+      </div>
+    </div>
+
+    <div class="stat">
+      <div class="ic red">
+        <mat-icon>warning</mat-icon>
+      </div>
+      <div class="meta">
+        <div class="num">{{ highPriorityCount }}</div>
+        <div class="label">HIGH PRIORITY</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Big card -->
+  <mat-card class="card">
+    <!-- Filters row -->
+    <div class="filters">
+      <div class="search">
+        <mat-icon>search</mat-icon>
+        <input
+          [value]="searchTerm"
+          (input)="onSearch($any($event.target).value)"
+          placeholder="Search by title or description..."
+        />
+      </div>
+
+      <mat-form-field appearance="outline" class="select">
+        <mat-select
+          [value]="filterStatus"
+          (selectionChange)="onStatusChange($event.value)"
+        >
+          <mat-option value="all">All Statuses</mat-option>
+          <mat-option value="new">New</mat-option>
+          <mat-option value="in_progress">In Progress</mat-option>
+          <mat-option value="resolved">Resolved</mat-option>
+          <mat-option value="rejected">Rejected</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <button
+        class="btn-icon"
+        mat-stroked-button
+        (click)="clearFilters()"
+        title="Clear"
+      >
+        <mat-icon>filter_list</mat-icon>
+      </button>
+    </div>
+
+    <!-- Loading -->
+    <div class="loading" *ngIf="loading">
+      <div class="spin"></div>
+      <span>Syncing your tasks...</span>
+    </div>
+
+    <!-- Empty -->
+    <div class="empty" *ngIf="!loading && filteredTasks.length === 0">
+      <div class="empty-circle">
+        <mat-icon>folder_open</mat-icon>
+      </div>
+      <h3>No tasks found</h3>
+      <p>Your search or filter criteria didn't match any records.</p>
+      <button mat-button class="clear" (click)="clearFilters()">
+        Clear all filters
+      </button>
+    </div>
+
+    <!-- Table -->
+    <div class="table" *ngIf="!loading && filteredTasks.length > 0">
+      <div class="thead">
+        <div>Title &amp; Description</div>
+        <div>Status</div>
+        <div class="center">Priority</div>
+        <div>Created</div>
+        <div class="right">Actions</div>
+      </div>
+
+      <div class="trow" *ngFor="let t of pagedTasks" (click)="openDetails(t)">
+        <!-- Title -->
+        <div class="td title">
+          <div class="t1">{{ t.title }}</div>
+          <div class="t2" *ngIf="t.description">{{ t.description }}</div>
+        </div>
+
+        <!-- Status -->
+        <div class="td">
+          <span class="badge" [ngClass]="'s-' + (t.status || 'new')">
+            {{ statusLabel(t.status || "new") }}
+          </span>
+        </div>
+
+        <!-- Priority -->
+        <div class="td center">
+          <div class="prio" [ngClass]="'p-' + (t.priority || 'medium')">
+            <span class="dot"></span>
+            <span>{{ (t.priority || "medium").toUpperCase() }}</span>
+          </div>
+        </div>
+
+        <!-- Created -->
+        <div class="td">
+          <div class="dt">
+            <span>{{ formatDate(t.createdAt) }}</span>
+            <small>{{ formatTime(t.createdAt) }}</small>
+          </div>
+        </div>
+
+        <!-- Actions -->
+        <div class="td right">
+          <div class="row-actions">
+            <button
+              mat-icon-button
+              (click)="$event.stopPropagation(); editTask(t)"
+              title="Edit"
+            >
+              <mat-icon>edit</mat-icon>
+            </button>
+
+            <button
+              mat-icon-button
+              color="warn"
+              (click)="$event.stopPropagation(); deleteTask(t)"
+              title="Delete"
+            >
+              <mat-icon>delete</mat-icon>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Footer paginator like screenshot -->
+      <div class="tfoot">
+        <span>Showing {{ filteredTasks.length }} results</span>
+
+        <div class="pager">
+          <button
+            class="pbtn"
+            [disabled]="pageIndex === 0"
+            (click)="prevPage()"
+          >
+            Previous
+          </button>
+
+          <button
+            class="pnum"
+            *ngFor="let p of pages"
+            [class.active]="p === pageIndex"
+            (click)="goToPage(p)"
+          >
+            {{ p + 1 }}
+          </button>
+
+          <button
+            class="pbtn"
+            [disabled]="pageIndex >= totalPages - 1"
+            (click)="nextPage()"
+          >
+            Next
+          </button>
+        </div>
+      </div>
+    </div>
+  </mat-card>
+</div>

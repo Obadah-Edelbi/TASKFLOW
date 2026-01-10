@@ -1,1 +1,37 @@
 /* You can add global styles to this file, and also import other style files */
+
+@import "ngx-toastr/toastr";
+
+html,
+body {
+  height: 100%;
+}
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+:root {
+  --bg-color: #f4f6f8;
+  --card-bg: #ffffff;
+  --text-color: #333;
+  --primary: #3f51b5;
+  --error: #f44336;
+}
+
+body.dark {
+  --bg-color: #121212;
+  --card-bg: #1e1e1e;
+  --text-color: #e0e0e0;
+  --primary: #90caf9;
+}
+body {
+  background: linear-gradient(135deg, #eef2f7, #e3e8ee);
+  min-height: 100vh;
+  margin: 0;
+  font-family: Roboto, sans-serif;
+}
+
+body.dark {
+  background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+}

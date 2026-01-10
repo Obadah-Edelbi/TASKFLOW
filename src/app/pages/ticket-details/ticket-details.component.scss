@@ -1,0 +1,33 @@
+.card {
+  padding: 16px;
+  border-radius: 16px;
+}
+.top {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.spacer {
+  flex: 1;
+}
+.title {
+  margin: 12px 0 10px;
+}
+.meta {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  opacity: 0.9;
+}
+.pill {
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.06);
+  font-size: 13px;
+}
+.desc {
+  margin-top: 14px;
+}
+.desc h3 {
+  margin: 0 0 6px;
+}
