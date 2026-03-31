@@ -6,7 +6,6 @@ import {
   ReactiveFormsModule,
   AbstractControl,
   ValidationErrors,
-  FormGroup,
 } from '@angular/forms';
 import { AuthService } from '../../core/services/auth.service';
 import { ToastrService } from 'ngx-toastr';
@@ -16,7 +15,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { CommonModule } from '@angular/common';
 
 function passwordMatchValidator(
-  control: AbstractControl
+  control: AbstractControl,
 ): ValidationErrors | null {
   const password = control.get('password')?.value;
   const confirmPassword = control.get('confirmPassword')?.value;
@@ -43,11 +42,12 @@ function passwordMatchValidator(
   styleUrl: './register.component.scss',
 })
 export class RegisterComponent {
+  form: any;
   constructor(
     private authService: AuthService,
     private fb: FormBuilder,
     private router: Router,
-    private toaster: ToastrService
+    private toaster: ToastrService,
   ) {}
 
   registerForm = this.fb.nonNullable.group(
@@ -57,7 +57,7 @@ export class RegisterComponent {
       password: ['', [Validators.required, Validators.minLength(6)]],
       confirmPassword: ['', [Validators.required]],
     },
-    { validators: passwordMatchValidator }
+    { validators: passwordMatchValidator },
   );
 
   onSubmit() {
@@ -70,9 +70,9 @@ export class RegisterComponent {
 
     this.authService
       .register({
-        name,
-        email,
-        password,
+        name: this.registerForm.value.name as string,
+        email: this.registerForm.value.email as string,
+        password: this.registerForm.value.password as string,
       })
       .subscribe({
         next: () => {

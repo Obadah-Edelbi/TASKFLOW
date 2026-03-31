@@ -1,6 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { AfterViewInit, Component, OnInit } from '@angular/core';
-import { ViewChild } from '@angular/core';
+import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatTableModule, MatTableDataSource } from '@angular/material/table';
 import { MatIconModule } from '@angular/material/icon';
@@ -10,9 +9,10 @@ import { MatInputModule } from '@angular/material/input';
 
 import { ToastrService } from 'ngx-toastr';
 import Swal from 'sweetalert2';
-
-import { Task, TasksService } from '../../core/services/tasks.service';
 import { Router } from '@angular/router';
+
+import { TasksService } from '../../core/services/tasks.service';
+import { Task } from '../../core/models/task.model';
 
 @Component({
   selector: 'app-tickets',
@@ -31,32 +31,44 @@ import { Router } from '@angular/router';
 })
 export class TicketsComponent implements OnInit, AfterViewInit {
   @ViewChild(MatPaginator) paginator!: MatPaginator;
+
   loading = false;
-  displayedColumns: string[] = ['title', 'status', 'createdAt', 'actions'];
+
+  displayedColumns: string[] = [
+    'title',
+    'priority',
+    'status',
+    'createdAt',
+    'actions',
+  ];
+
   dataSource = new MatTableDataSource<Task>([]);
 
   constructor(
     private tasksService: TasksService,
     private toastr: ToastrService,
-    private router: Router
+    private router: Router,
   ) {}
+
+  ngOnInit(): void {
+    this.loadTasks();
+
+    // 🔥 فلترة حسب title فقط
+    this.dataSource.filterPredicate = (data: Task, filter: string) =>
+      data.title.toLowerCase().includes(filter);
+  }
 
   ngAfterViewInit() {
     this.dataSource.paginator = this.paginator;
   }
 
-  ngOnInit(): void {
-    this.load();
-  }
-
-  load(): void {
+  // ================= LOAD =================
+  loadTasks(): void {
     this.loading = true;
 
     this.tasksService.getAll().subscribe({
       next: (res: any) => {
-        const list = Array.isArray(res)
-          ? res
-          : res.tasks || res.data || res.items || [];
+        const list = Array.isArray(res) ? res : res.tasks || [];
 
         this.dataSource.data = list;
         this.loading = false;
@@ -68,19 +80,25 @@ export class TicketsComponent implements OnInit, AfterViewInit {
     });
   }
 
+  // ================= FILTER =================
   applyFilter(value: string) {
     this.dataSource.filter = value.trim().toLowerCase();
   }
 
-  editTask(t: any) {
-    const id = t._id || t.id; // لأن عندك ظاهر id بالصورة
-    this.router.navigate(['/dashboard/tasks', id, 'edit']);
+  // ================= NAVIGATION =================
+  openDetails(task: Task) {
+    this.router.navigate(['/dashboard/tasks', task._id]);
   }
 
-  async deleteTask(t: Task) {
+  editTask(task: Task) {
+    this.router.navigate(['/dashboard/tasks', task._id, 'edit']);
+  }
+
+  // ================= DELETE =================
+  async deleteTask(task: Task) {
     const result = await Swal.fire({
       title: 'Delete task?',
-      text: t.title,
+      text: task.title,
       icon: 'warning',
       showCancelButton: true,
       confirmButtonText: 'Delete',
@@ -88,10 +106,10 @@ export class TicketsComponent implements OnInit, AfterViewInit {
 
     if (!result.isConfirmed) return;
 
-    this.tasksService.delete(t._id).subscribe({
+    this.tasksService.delete(task._id).subscribe({
       next: () => {
         this.toastr.success('Task deleted');
-        this.load();
+        this.loadTasks();
       },
       error: () => this.toastr.error('Delete failed'),
     });

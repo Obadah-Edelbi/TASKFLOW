@@ -1,0 +1,146 @@
+<nav class="topbar" *ngIf="isLoggedIn">
+  <div class="topbar-container">
+    <div class="topbar-content">
+      <!-- LEFT -->
+      <div class="left-section">
+        <div class="logo-section" [routerLink]="['/dashboard']">
+          <div class="logo-icon">
+            <mat-icon>task_alt</mat-icon>
+          </div>
+          <span class="logo-text">TaskFlow</span>
+        </div>
+
+        <div class="nav-links-desktop">
+          <button
+            *ngFor="let link of visibleNavLinks"
+            (click)="setActiveTab(link.name, link.route)"
+            [class.active]="activeTab === link.name"
+            class="nav-link-btn"
+          >
+            <mat-icon>{{ link.icon }}</mat-icon>
+            {{ link.name }}
+          </button>
+        </div>
+      </div>
+
+      <!-- RIGHT -->
+      <div class="right-section">
+        <!-- THEME -->
+        <button class="icon-btn" (click)="toggleTheme()">
+          <mat-icon>dark_mode</mat-icon>
+        </button>
+
+        <!-- 🔔 NOTIFICATIONS -->
+        <button
+          class="icon-btn notification-btn"
+          [matMenuTriggerFor]="notifMenu"
+          (click)="markAllAsRead()"
+        >
+          <mat-icon>notifications</mat-icon>
+
+          <span *ngIf="unreadCount > 0" class="notification-badge">
+            {{ unreadCount }}
+          </span>
+        </button>
+
+        <!-- 🔔 MENU -->
+        <mat-menu #notifMenu="matMenu" class="notif-menu">
+          <!-- HEADER -->
+          <div class="notif-header">
+            <span>Notifications</span>
+            <button *ngIf="notifications.length" (click)="clearAll()">
+              Clear
+            </button>
+          </div>
+
+          <!-- EMPTY -->
+          <div *ngIf="notifications.length === 0" class="notif-empty">
+            No notifications
+          </div>
+
+          <!-- ITEMS -->
+          <button
+            mat-menu-item
+            *ngFor="let n of notifications"
+            (click)="markOneAsRead(n)"
+            class="notif-item"
+            [class.unread]="!n.read"
+          >
+            <div class="notif-content">
+              <div class="notif-message">
+                {{ n.message }}
+              </div>
+
+              <div class="notif-time">
+                {{ timeAgo(n.createdAt) }}
+              </div>
+            </div>
+          </button>
+        </mat-menu>
+
+        <div class="divider"></div>
+
+        <!-- USER -->
+        <div class="user-menu-wrapper">
+          <button (click)="toggleUserMenu($event)" class="user-menu-trigger">
+            <div class="user-avatar">
+              <div class="nav-user">
+                <img
+                  *ngIf="authService.user?.image"
+                  [src]="'http://localhost:5000' + authService.user?.image"
+                />
+
+                <div
+                  *ngIf="!authService.user?.image"
+                  class="avatar-placeholder"
+                >
+                  {{ authService.user?.name?.charAt(0) }}
+                </div>
+              </div>
+            </div>
+            <div class="user-text">
+              <p class="user-name">{{ username }}</p>
+
+              <!-- Admin -->
+              <span
+                *ngIf="authService.user?.role === 'admin'"
+                class="role-admin"
+              >
+                <mat-icon>admin_panel_settings</mat-icon>
+                Admin
+              </span>
+
+              <!-- User -->
+              <span *ngIf="authService.user?.role === 'user'" class="role-user">
+                <mat-icon>person</mat-icon>
+                User
+              </span>
+            </div>
+            <mat-icon class="chevron" [class.rotated]="showUserMenu">
+              expand_more
+            </mat-icon>
+          </button>
+
+          <!-- DROPDOWN -->
+          <div *ngIf="showUserMenu" class="dropdown-menu">
+            <button routerLink="/dashboard/profile" class="dropdown-item">
+              <mat-icon>person</mat-icon>
+              <span>Profile</span>
+            </button>
+
+            <button routerLink="/dashboard/settings" class="dropdown-item">
+              <mat-icon>settings</mat-icon>
+              <span>Settings</span>
+            </button>
+            <div class="dropdown-divider"></div>
+
+            <button (click)="logout()" class="dropdown-item logout">
+              <mat-icon>logout</mat-icon>
+              Sign out
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</nav>

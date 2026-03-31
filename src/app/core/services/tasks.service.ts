@@ -1,40 +1,85 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { environment } from '../../../environments/environments.development';
-import { map } from 'rxjs/operators';
+import { Observable } from 'rxjs';
 
-export interface Task {
-  _id: string;
-  title: string;
-  description: string;
-  priority?: 'low' | 'medium' | 'high';
-  status?: 'new' | 'in_progress' | 'resolved' | 'rejected';
-  createdAt?: string;
-}
-
-@Injectable({ providedIn: 'root' })
+@Injectable({
+  providedIn: 'root',
+})
 export class TasksService {
-  private api = `${environment.apiUrl}/tasks`;
+  private api = 'http://localhost:5000/api/tasks';
+  private usersApi = 'http://localhost:5000/api/users';
 
   constructor(private http: HttpClient) {}
 
-  getAll() {
-    return this.http.get<any>(this.api).pipe(map((res) => res.tasks ?? []));
+  /* ================= USER TASKS ================= */
+
+  // get my tasks
+  getAll(): Observable<any> {
+    return this.http.get(this.api);
   }
 
-  getById(id: string) {
-    return this.http.get<Task>(`${this.api}/${id}`);
+  // get single task
+  getById(id: string): Observable<any> {
+    return this.http.get(`${this.api}/${id}`);
   }
 
-  create(payload: any) {
-    return this.http.post(`${this.api}`, payload);
+  // create task
+  create(data: any): Observable<any> {
+    return this.http.post(this.api, data);
   }
 
-  update(id: string, payload: any) {
-    return this.http.put(`${this.api}/${id}`, payload);
+  // update task (user cannot change status)
+  update(id: string, data: any): Observable<any> {
+    return this.http.put(`${this.api}/${id}`, data);
   }
 
-  delete(id: string) {
-    return this.http.delete<void>(`${this.api}/${id}`);
+  // delete my task
+  delete(id: string): Observable<any> {
+    return this.http.delete(`${this.api}/${id}`);
+  }
+
+  // add comment to task
+  addComment(id: string, text: string): Observable<any> {
+    return this.http.post(`${this.api}/${id}/comments`, { text });
+  }
+
+  // get comments
+  getComments(id: string): Observable<any> {
+    return this.http.get(`${this.api}/${id}/comments`);
+  }
+
+  /* ================= ADMIN ================= */
+
+  // get all tasks (admin)
+  getAllAdmin(): Observable<any> {
+    return this.http.get(`${this.api}/admin/all`);
+  }
+
+  // 🔥 FIXED HERE
+  // update task status (admin)
+  updateStatus(id: string, status: string): Observable<any> {
+    return this.http.put(`${this.api}/update-status/${id}`, { status });
+  }
+
+  // delete task as admin
+  deleteAsAdmin(id: string): Observable<any> {
+    return this.http.delete(`${this.api}/admin/${id}`);
+  }
+
+  // assign task
+  assignTask(id: string, userId: string): Observable<any> {
+    return this.http.put(`${this.api}/admin/assign/${id}`, { userId });
+  }
+
+  // get admin statistics
+  getAdminStats(): Observable<any> {
+    return this.http.get(`${this.api}/admin/stats`);
+  }
+
+  /* ================= USERS ================= */
+
+  // get all users (for assigning tasks)
+  getAllUsers(): Observable<any> {
+    return this.http.get(`${this.usersApi}/all-users`);
   }
 }

@@ -1,0 +1,520 @@
+/* ================= TOPBAR ================= */
+
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: var(--card);
+  border-bottom: 1px solid var(--border);
+}
+
+.topbar-container {
+  max-width: 1232px;
+  margin: 0 auto;
+  padding: 0 24px;
+  width: 100%;
+}
+
+.topbar-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 64px;
+}
+
+/* ================= LEFT ================= */
+
+.left-section {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+}
+
+.logo-section {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+}
+
+.logo-icon {
+  width: 32px;
+  height: 32px;
+  background: var(--accent);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.logo-icon mat-icon {
+  font-size: 20px;
+  color: white;
+}
+
+.logo-text {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text);
+}
+
+/* NAV LINKS */
+
+.nav-links-desktop {
+  display: flex;
+  gap: 6px;
+}
+
+.nav-link-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border-radius: 8px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  color: var(--text-muted);
+  transition: 0.2s;
+}
+
+.nav-link-btn:hover {
+  background: var(--card-hover);
+  color: var(--text);
+}
+
+.nav-link-btn.active {
+  color: var(--accent);
+  background: rgba(255, 140, 66, 0.15);
+}
+
+/* ================= RIGHT ================= */
+
+.right-section {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.icon-btn {
+  position: relative;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 10px;
+  transition: 0.2s ease;
+}
+
+.icon-btn:hover {
+  background: var(--card-hover);
+}
+
+.icon-btn mat-icon {
+  font-size: 22px;
+  color: var(--text-muted);
+}
+
+/* ================= 🔔 NOTIFICATIONS ================= */
+
+.notification-btn {
+  position: relative;
+}
+
+/* BADGE */
+.notification-badge {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+
+  min-width: 18px;
+  height: 18px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 0 6px;
+
+  background: #ef4444;
+  color: #fff;
+  font-size: 10px;
+  font-weight: 700;
+
+  border-radius: 999px;
+
+  box-shadow: 0 0 0 2px var(--card);
+}
+
+/* MENU */
+.notif-menu {
+  width: 280px;
+  padding: 6px;
+}
+
+/* SCROLL */
+::ng-deep .mat-mdc-menu-panel.notif-menu {
+  max-height: 320px;
+  overflow-y: auto;
+}
+
+/* HEADER */
+.notif-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.notif-header button {
+  border: none;
+  background: transparent;
+  color: var(--accent);
+  cursor: pointer;
+}
+
+/* EMPTY */
+.notif-empty {
+  padding: 14px;
+  text-align: center;
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+/* ITEM */
+.notif-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+
+  padding: 12px 10px;
+  border-radius: 8px;
+
+  position: relative;
+  transition: 0.2s ease;
+}
+
+.notif-item:hover {
+  background: var(--card-hover);
+}
+
+/* CONTENT */
+.notif-content {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+/* MESSAGE */
+.notif-message {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text);
+  line-height: 1.4;
+}
+
+/* TIME */
+.notif-time {
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+/* UNREAD */
+.notif-item.unread {
+  background: rgba(255, 140, 66, 0.12);
+}
+
+/* DOT */
+.notif-item.unread::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  background: var(--accent);
+  border-radius: 50%;
+
+  position: absolute;
+  left: 8px;
+  top: 14px;
+}
+
+/* ANIMATION */
+.notification-btn.has-new {
+  animation: bellPop 0.3s ease;
+}
+
+@keyframes bellPop {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.25);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* ================= DIVIDER ================= */
+
+.divider {
+  width: 1px;
+  height: 24px;
+  background: var(--border);
+}
+
+/* ================= USER ================= */
+
+.user-menu-wrapper {
+  position: relative;
+}
+
+.user-menu-trigger {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 8px;
+  border-radius: 8px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.user-menu-trigger:hover {
+  background: var(--card-hover);
+}
+
+.user-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.user-avatar mat-icon {
+  font-size: 20px;
+  color: var(--text-muted);
+}
+
+.user-name {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+/* DROPDOWN */
+
+.dropdown-menu {
+  position: absolute;
+  right: 0;
+  top: 110%;
+  width: 180px;
+
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+
+  padding: 6px;
+  z-index: 100;
+}
+
+.dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  width: 100%;
+  padding: 8px;
+  border-radius: 6px;
+
+  background: transparent;
+  border: none;
+
+  cursor: pointer;
+  text-align: left;
+  transition: 0.2s;
+}
+
+.dropdown-item:hover {
+  background: var(--card-hover);
+}
+
+.dropdown-item mat-icon {
+  font-size: 18px;
+}
+
+.dropdown-item.logout {
+  color: #ef4444;
+}
+
+.dropdown-divider {
+  height: 1px;
+  background: var(--border);
+  margin: 6px 0;
+}
+
+/* ================= DARK MODE ================= */
+
+body.dark .dropdown-menu {
+  background: #18181b !important;
+  border: 1px solid #27272a !important;
+}
+
+body.dark .dropdown-item {
+  color: #ffffff !important;
+}
+
+body.dark .dropdown-item mat-icon {
+  color: #a1a1aa !important;
+}
+
+body.dark .dropdown-item:hover {
+  background: #27272a !important;
+  color: #ffffff !important;
+}
+
+body.dark .dropdown-item:hover mat-icon {
+  color: #ffffff !important;
+}
+
+body.dark .dropdown-divider {
+  background: #27272a !important;
+}
+
+body.dark .dropdown-item.logout {
+  color: #f87171 !important;
+}
+
+/* ================= MOBILE ================= */
+
+@media (max-width: 768px) {
+  /* ❌ hide topbar */
+  .topbar {
+    display: none;
+  }
+
+  /* full width */
+  .topbar-container {
+    max-width: 100%;
+    padding: 0 12px;
+  }
+
+  /* notif menu mobile */
+  .notif-menu {
+    width: 95vw !important;
+    max-width: none;
+  }
+
+  /* hide desktop nav */
+  .nav-links-desktop {
+    display: none;
+  }
+}
+
+/* ================= GLOBAL FIX ================= */
+
+html,
+body {
+  overflow-x: hidden;
+}
+.nav-user img,
+.nav-user .avatar-placeholder {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  object-fit: cover;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: var(--accent);
+  color: white;
+  font-size: 14px;
+  font-weight: bold;
+}
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.admin-icon {
+  font-size: 18px;
+  color: #f59e0b;
+}
+/* يخلي الاسم وفوقه/تحته مرتب */
+.user-text {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+/* الاسم */
+.user-name {
+  margin: 0;
+  font-weight: 600;
+}
+
+/* 🔥 role تحت الاسم */
+.role-admin {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+
+  font-size: 11px;
+  margin-top: 2px;
+
+  color: #f59e0b; /* ذهبي */
+}
+
+.role-admin mat-icon {
+  font-size: 14px;
+}
+/* wrapper */
+.user-text {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+/* Admin */
+.role-admin {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+
+  font-size: 11px;
+  margin-top: 2px;
+
+  color: #f59e0b; /* 🔥 ذهبي */
+  padding: 2px 8px;
+  border-radius: 999px;
+}
+
+.role-admin mat-icon {
+  font-size: 13px;
+}
+
+/* User */
+.role-user {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+
+  font-size: 11px;
+  margin-top: 2px;
+
+  color: #60a5fa; /* 🔵 أزرق */
+  padding: 2px 8px;
+  border-radius: 999px;
+}
+
+.role-user mat-icon {
+  font-size: 13px;
+}

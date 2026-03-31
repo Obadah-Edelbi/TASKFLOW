@@ -1,68 +1,65 @@
 <div class="wrap">
-  <!-- Overview header -->
+  <!-- ================= HERO ================= -->
   <div class="hero">
     <div class="hero-left">
       <h1>Overview</h1>
       <p>Manage and track your operational workflows efficiently.</p>
     </div>
 
-    <button
-      class="btn-primary"
-      mat-flat-button
-      color="primary"
-      (click)="createTask()"
-    >
-      <mat-icon>add</mat-icon>
-      Create Task
+    <button class="create-btn" (click)="createTask()">
+      <span class="plus">
+        <mat-icon>add</mat-icon>
+      </span>
+      <span>Create Task</span>
     </button>
   </div>
 
-  <!-- Stats -->
+  <!-- ================= STATS ================= -->
   <div class="stats">
-    <div class="stat">
-      <div class="ic blue">
+    <div class="stat-card">
+      <div class="stat-icon total">
         <mat-icon>assignment</mat-icon>
       </div>
-      <div class="meta">
-        <div class="num">{{ totalTasks }}</div>
-        <div class="label">TOTAL TASKS</div>
+      <div class="stat-text">
+        <span>Total Tasks</span>
+        <h2>{{ totalTasks }}</h2>
       </div>
     </div>
 
-    <div class="stat">
-      <div class="ic indigo">
+    <div class="stat-card">
+      <div class="stat-icon progress">
         <mat-icon>schedule</mat-icon>
       </div>
-      <div class="meta">
-        <div class="num">{{ inProgressCount }}</div>
-        <div class="label">IN PROGRESS</div>
+      <div class="stat-text">
+        <span>In Progress</span>
+        <h2>{{ inProgressCount }}</h2>
       </div>
     </div>
 
-    <div class="stat">
-      <div class="ic green">
+    <div class="stat-card">
+      <div class="stat-icon resolved">
         <mat-icon>check_circle</mat-icon>
       </div>
-      <div class="meta">
-        <div class="num">{{ completedCount }}</div>
-        <div class="label">COMPLETED</div>
+      <div class="stat-text">
+        <span>Resolved</span>
+        <h2>{{ completedCount }}</h2>
       </div>
     </div>
 
-    <div class="stat">
-      <div class="ic red">
-        <mat-icon>warning</mat-icon>
+    <div class="stat-card">
+      <div class="stat-icon rejected">
+        <mat-icon>error</mat-icon>
       </div>
-      <div class="meta">
-        <div class="num">{{ highPriorityCount }}</div>
-        <div class="label">HIGH PRIORITY</div>
+      <div class="stat-text">
+        <span>High Priority</span>
+        <h2>{{ highPriorityCount }}</h2>
       </div>
     </div>
   </div>
 
-  <!-- Big card -->
+  <!-- ================= MAIN CARD ================= -->
   <mat-card class="card">
-    <!-- Filters row -->
+    <!-- ================= FILTERS ================= -->
     <div class="filters">
       <div class="search">
         <mat-icon>search</mat-icon>
@@ -88,7 +85,7 @@
 
       <button
         class="btn-icon"
-        mat-stroked-button
+        mat-icon-button
         (click)="clearFilters()"
         title="Clear"
       >
@@ -96,49 +93,59 @@
       </button>
     </div>
 
-    <!-- Loading -->
+    <!-- ================= LOADING ================= -->
     <div class="loading" *ngIf="loading">
       <div class="spin"></div>
       <span>Syncing your tasks...</span>
     </div>
 
-    <!-- Empty -->
-    <div class="empty" *ngIf="!loading && filteredTasks.length === 0">
-      <div class="empty-circle">
-        <mat-icon>folder_open</mat-icon>
+    <!-- ================= EMPTY STATE ================= -->
+    <div *ngIf="!loading && pagedTasks.length === 0" class="empty-wrapper">
+      <div class="empty-card">
+        <div class="icon-wrapper">
+          <mat-icon>folder_off</mat-icon>
+        </div>
+
+        <h3>No tasks found</h3>
+
+        <p>Your search or filter criteria didn’t match any records.</p>
       </div>
-      <h3>No tasks found</h3>
-      <p>Your search or filter criteria didn't match any records.</p>
-      <button mat-button class="clear" (click)="clearFilters()">
-        Clear all filters
-      </button>
     </div>
 
-    <!-- Table -->
-    <div class="table" *ngIf="!loading && filteredTasks.length > 0">
+    <!-- ================= TABLE ================= -->
+    <div class="table" *ngIf="!loading && pagedTasks.length > 0">
+      <!-- HEADER -->
       <div class="thead">
-        <div>Title &amp; Description</div>
+        <div class="left">Title & Description</div>
         <div>Status</div>
         <div class="center">Priority</div>
         <div>Created</div>
-        <div class="right">Actions</div>
+        <div class="center">Actions</div>
       </div>
 
-      <div class="trow" *ngFor="let t of pagedTasks" (click)="openDetails(t)">
-        <!-- Title -->
+      <!-- ROWS -->
+      <div
+        class="trow"
+        *ngFor="let t of pagedTasks; trackBy: trackByTask"
+        [class.removing]="t?.removing"
+        (click)="openDetails(t)"
+      >
+        <!-- TITLE -->
         <div class="td title">
           <div class="t1">{{ t.title }}</div>
-          <div class="t2" *ngIf="t.description">{{ t.description }}</div>
+          <div class="t2" *ngIf="t.description">
+            {{ t.description }}
+          </div>
         </div>
 
-        <!-- Status -->
+        <!-- STATUS -->
         <div class="td">
           <span class="badge" [ngClass]="'s-' + (t.status || 'new')">
             {{ statusLabel(t.status || "new") }}
           </span>
         </div>
 
-        <!-- Priority -->
+        <!-- PRIORITY -->
         <div class="td center">
           <div class="prio" [ngClass]="'p-' + (t.priority || 'medium')">
             <span class="dot"></span>
@@ -146,7 +153,7 @@
           </div>
         </div>
 
-        <!-- Created -->
+        <!-- CREATED -->
         <div class="td">
           <div class="dt">
             <span>{{ formatDate(t.createdAt) }}</span>
@@ -154,12 +161,12 @@
           </div>
         </div>
 
-        <!-- Actions -->
+        <!-- ACTIONS -->
         <div class="td right">
           <div class="row-actions">
             <button
               mat-icon-button
-              (click)="$event.stopPropagation(); editTask(t)"
+              (click)="$event.stopPropagation(); openEditDialog(t)"
               title="Edit"
             >
               <mat-icon>edit</mat-icon>
@@ -167,7 +174,6 @@
 
             <button
               mat-icon-button
-              color="warn"
               (click)="$event.stopPropagation(); deleteTask(t)"
               title="Delete"
             >
@@ -177,7 +183,7 @@
         </div>
       </div>
 
-      <!-- Footer paginator like screenshot -->
+      <!-- ================= PAGINATION ================= -->
       <div class="tfoot">
         <span>Showing {{ filteredTasks.length }} results</span>
 

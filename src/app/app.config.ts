@@ -8,7 +8,7 @@ import {
 import { routes } from './app.routes';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { AuthInterceptor } from './core/interceptors/auth.interceptor';
-import { ToastrModule } from 'ngx-toastr';
+import { provideToastr } from 'ngx-toastr';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -16,21 +16,18 @@ export const appConfig: ApplicationConfig = {
     provideAnimationsAsync(),
     provideHttpClient(withInterceptorsFromDi()),
 
-    // ✅ تسجيل الـ Class Interceptor
     {
       provide: HTTP_INTERCEPTORS,
       useClass: AuthInterceptor,
       multi: true,
     },
 
-    //    // ✅ Toastr
-
-    ToastrModule.forRoot({
+    provideToastr({
       positionClass: 'toast-top-center',
       timeOut: 3000,
       closeButton: true,
       progressBar: true,
       preventDuplicates: true,
-    }).providers!,
+    }),
   ],
 };

@@ -1,0 +1,73 @@
+<div class="settings-page">
+  <!-- HEADER -->
+  <div class="settings-header">
+    <h1>Settings</h1>
+    <p>Configure your application preferences and account settings.</p>
+  </div>
+
+  <div class="settings-container">
+    <!-- GENERAL -->
+    <div class="settings-card">
+      <div class="card-header">
+        <h3>General Settings</h3>
+      </div>
+
+      <div class="setting-row">
+        <div>
+          <strong>Dark Mode</strong>
+          <p>Switch between light and dark themes.</p>
+        </div>
+
+        <button class="toggle" [class.active]="isDark" (click)="toggleTheme()">
+          <div class="dot"></div>
+        </button>
+      </div>
+
+      <div class="setting-row">
+        <div>
+          <strong>Language</strong>
+          <p>Choose your preferred language.</p>
+        </div>
+
+        <select [(ngModel)]="language">
+          <option>English</option>
+          <option>Arabic</option>
+          <option>French</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- NOTIFICATIONS -->
+    <div class="settings-card">
+      <div class="card-header">
+        <h3>Notifications</h3>
+      </div>
+
+      <div class="setting-row">
+        <div>
+          <strong>Email Notifications</strong>
+          <p>Receive updates via email.</p>
+        </div>
+
+        <input type="checkbox" [(ngModel)]="emailNotif" />
+      </div>
+
+      <div class="setting-row">
+        <div>
+          <strong>Push Notifications</strong>
+          <p>Receive real-time alerts.</p>
+        </div>
+
+        <input type="checkbox" [(ngModel)]="pushNotif" />
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <div class="settings-footer">
+    <button class="logout-btn" (click)="logout()">
+      <mat-icon>logout</mat-icon>
+      Sign Out of All Devices
+    </button>
+  </div>
+</div>

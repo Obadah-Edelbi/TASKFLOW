@@ -1,3 +1,12 @@
+:host {
+  display: block;
+  min-height: 100vh;
+  background: var(--bg);
+  padding-top: 40px;
+}
+
+/* CARD */
+
 .auth-form {
   max-width: 420px;
   margin: 80px auto;
@@ -5,55 +14,101 @@
 
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 18px;
 
-  background: #ffffff;
+  background: var(--bg-elevated);
+  color: var(--text);
+
   border-radius: 12px;
 
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
 }
+
+/* TITLE */
 
 .auth-form h2 {
   text-align: center;
-  margin-bottom: 10px;
   font-weight: 600;
-  color: #333;
+  margin-bottom: 10px;
 }
+
+/* INPUT WIDTH */
 
 .full-width {
   width: 100%;
 }
 
-button {
-  height: 44px;
-  font-weight: 600;
-  font-size: 15px;
-  margin-top: 10px;
+/* REMOVE MATERIAL DESIGN */
+
+::ng-deep .mat-mdc-text-field-wrapper {
+  background: transparent !important;
 }
 
-/* Error text spacing fix */
+::ng-deep .mdc-notched-outline {
+  display: none !important;
+}
+
+/* INPUT TEXT COLOR */
+
+::ng-deep input.mat-mdc-input-element {
+  color: var(--text) !important;
+}
+
+/* PLACEHOLDER */
+
+::ng-deep input.mat-mdc-input-element::placeholder {
+  color: var(--text-muted) !important;
+}
+
+/* LABEL */
+
+::ng-deep .mat-mdc-floating-label {
+  color: var(--text-muted) !important;
+}
+
+/* ERROR */
+
 mat-error {
   font-size: 12px;
 }
 
-/* Mobile responsive */
-@media (max-width: 480px) {
-  .auth-form {
-    margin: 40px 16px;
-    padding: 24px 20px;
-  }
+/* BUTTON */
+
+.submit-btn {
+  height: 44px;
+  font-weight: 600;
+  margin-top: 10px;
 }
+
+/* DISABLED BUTTON */
+
+.submit-btn:disabled {
+  background: #cbd5e1 !important;
+  color: #64748b !important;
+  cursor: not-allowed;
+  box-shadow: none !important;
+}
+
+/* ACTIVE BUTTON */
+
+.submit-btn:not(:disabled) {
+  background: var(--accent) !important;
+  color: white;
+}
+
+/* LINKS */
+
 .auth-links {
-  margin-top: 15px;
+  margin-top: 16px;
+  text-align: center;
+
   display: flex;
   flex-direction: column;
-  align-items: center;
   gap: 8px;
 }
 
 .auth-links a {
-  font-size: 14px;
-  color: #3f51b5;
+  color: var(--accent);
   text-decoration: none;
 }
 
@@ -61,14 +116,49 @@ mat-error {
   text-decoration: underline;
 }
 
-.auth-links .forgot {
-  font-size: 13px;
-  color: #666;
+.auth-link {
+  margin-top: 15px;
+  text-align: center;
+  font-size: 14px;
 }
-.auth-form {
-  background: var(--card-bg);
-  color: var(--text-color);
 
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
-  animation: slideFade 0.6s ease;
+.auth-link a {
+  color: var(--accent);
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.auth-link a:hover {
+  text-decoration: underline;
+}
+/* BUTTON BASE */
+
+.submit-btn {
+  height: 44px;
+  font-weight: 600;
+  margin-top: 10px;
+  transition: 0.2s ease;
+}
+
+/* DISABLED */
+
+.submit-btn:disabled {
+  background: #cbd5e1 !important;
+  color: #64748b !important;
+  cursor: not-allowed;
+  box-shadow: none !important;
+  opacity: 0.8;
+}
+
+/* ENABLED */
+
+.submit-btn:not(:disabled) {
+  background: var(--accent) !important;
+  color: #ffffff !important;
+}
+
+/* HOVER */
+
+.submit-btn:not(:disabled):hover {
+  transform: translateY(-2px);
 }

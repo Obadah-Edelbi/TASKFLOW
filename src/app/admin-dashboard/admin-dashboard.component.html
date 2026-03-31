@@ -1,1 +1,148 @@
-<p>admin-dashboard works!</p>
+<div class="wrap">
+  <!-- ================= HERO ================= -->
+  <div class="hero">
+    <div class="hero-left">
+      <h1>Admin Dashboard</h1>
+      <p>Manage all users tasks and monitor system activity.</p>
+    </div>
+  </div>
+
+  <!-- ================= SEARCH ================= -->
+  <div class="filters">
+    <div class="search">
+      <mat-icon>search</mat-icon>
+      <input
+        (input)="applyFilter($any($event.target).value)"
+        placeholder="Search by title or description..."
+      />
+    </div>
+  </div>
+
+  <!-- ================= STATS ================= -->
+  <div class="stats">
+    <div class="stat">
+      <div class="stat-left">
+        <div class="ic blue">
+          <mat-icon>assignment</mat-icon>
+        </div>
+        <div class="text">
+          <div class="label">Total Tasks</div>
+          <div class="num">{{ stats.total }}</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="stat">
+      <div class="stat-left">
+        <div class="ic indigo">
+          <mat-icon>schedule</mat-icon>
+        </div>
+        <div class="text">
+          <div class="label">In Progress</div>
+          <div class="num">{{ stats.in_progress }}</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="stat">
+      <div class="stat-left">
+        <div class="ic green">
+          <mat-icon>check_circle</mat-icon>
+        </div>
+        <div class="text">
+          <div class="label">Resolved</div>
+          <div class="num">{{ stats.resolved }}</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="stat">
+      <div class="stat-left">
+        <div class="ic red">
+          <mat-icon>warning</mat-icon>
+        </div>
+        <div class="text">
+          <div class="label">Rejected</div>
+          <div class="num">{{ stats.rejected }}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= TABLE ================= -->
+  <div class="card">
+    <!-- LOADING -->
+    <div class="loading" *ngIf="loading">
+      <div class="spin"></div>
+      <span>Loading tasks...</span>
+    </div>
+
+    <!-- EMPTY -->
+    <div *ngIf="!loading && tasks.length === 0" class="empty-wrapper">
+      <div class="empty-card">
+        <div class="icon-wrapper">
+          <mat-icon>folder_off</mat-icon>
+        </div>
+
+        <h3>No tasks found</h3>
+        <p>No data matching your search</p>
+      </div>
+    </div>
+
+    <!-- TABLE -->
+    <div class="table" *ngIf="!loading && tasks.length > 0">
+      <!-- HEADER -->
+      <div class="thead">
+        <div class="left">Title</div>
+        <div>Status</div>
+        <div class="center">Priority</div>
+        <div>Created</div>
+        <div class="center">Actions</div>
+      </div>
+
+      <!-- ROWS -->
+      <div class="trow" *ngFor="let t of tasks">
+        <!-- TITLE -->
+        <div class="td title">
+          <div class="t1">{{ t.title }}</div>
+          <div class="t2">{{ t.description }}</div>
+        </div>
+
+        <!-- STATUS -->
+        <div class="td center">
+          <mat-form-field appearance="outline" class="status-select">
+            <mat-select
+              [value]="t.status"
+              (selectionChange)="changeStatus(t, $event.value)"
+            >
+              <mat-option value="new">New</mat-option>
+              <mat-option value="in_progress">In Progress</mat-option>
+              <mat-option value="resolved">Resolved</mat-option>
+              <mat-option value="rejected">Rejected</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+
+        <!-- PRIORITY -->
+        <div class="td center">
+          <div class="prio" [ngClass]="'p-' + t.priority">
+            <span class="dot"></span>
+            <span>{{ t.priority }}</span>
+          </div>
+        </div>
+
+        <!-- CREATED -->
+        <div class="td">
+          {{ t.createdAt | date: "short" }}
+        </div>
+
+        <!-- ACTIONS -->
+        <div class="td center">
+          <button mat-icon-button (click)="deleteTask(t)">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

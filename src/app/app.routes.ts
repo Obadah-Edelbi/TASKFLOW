@@ -5,53 +5,69 @@ import { RegisterComponent } from './auth/register/register.component';
 
 import { DashboardLayoutComponent } from './pages/dashboard-layout/dashboard-layout.component';
 
-import { TicketsComponent } from './pages/tickets/tickets.component';
-import { TicketDetailsComponent } from './pages/ticket-details/ticket-details.component';
-
 import { TasksComponent } from './pages/tasks/tasks.component';
+import { TaskFormComponent } from './pages/tasks/task-form/task-form.component';
+import { TaskDetailsComponent } from './pages/tasks/task-details/task-details.component';
 
-import { AdminComponent } from './pages/admin/admin.component';
+import { TicketsComponent } from './pages/tickets/tickets.component';
+
 import { AdminDashboardComponent } from './admin-dashboard/admin-dashboard.component';
 
 import { authGuard } from './core/gaurds/auth.gaurd';
 import { adminGuard } from './core/gaurds/admin.gaurd';
-import { TaskFormComponent } from './pages/task-form/task-form.component';
 
 export const routes: Routes = [
+  // ================= AUTH =================
   { path: '', redirectTo: 'login', pathMatch: 'full' },
 
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
 
+  // ================= DASHBOARD =================
   {
     path: 'dashboard',
     component: DashboardLayoutComponent,
     canActivate: [authGuard],
     children: [
-      // default داخل الداشبورد
+      // default
       { path: '', redirectTo: 'tasks', pathMatch: 'full' },
 
-      // ✅ Tickets (إذا بدك تضل تستخدمها)
-      { path: 'tickets', component: TicketsComponent },
-      { path: 'tickets/new', component: TaskFormComponent },
-      { path: 'tickets/:id/edit', component: TaskFormComponent },
-      { path: 'ticket-details/:id', component: TicketDetailsComponent },
-      // ✅ Tasks
-      { path: 'tasks', component: TasksComponent }, // الأفضل مو TicketsComponent
+      // ================= TASKS =================
+      { path: 'tasks', component: TasksComponent },
       { path: 'tasks/new', component: TaskFormComponent },
+      { path: 'tasks/:id', component: TaskDetailsComponent },
       { path: 'tasks/:id/edit', component: TaskFormComponent },
 
-      { path: 'tasks/:id', component: TicketDetailsComponent },
-
-      // ✅ Admin
-      { path: 'admin', component: AdminComponent, canActivate: [adminGuard] },
+      // ================= PROFILE =================
       {
-        path: 'admindashboard',
+        path: 'profile',
+        loadComponent: () =>
+          import('./pages/profile/profile.component').then(
+            (m) => m.ProfileComponent,
+          ),
+      },
+
+      // ================= SETTINGS =================
+      {
+        path: 'settings',
+        loadComponent: () =>
+          import('./pages/settings/settings.component').then(
+            (m) => m.SettingsComponent,
+          ),
+      },
+
+      // ================= TICKETS =================
+      { path: 'tickets', component: TicketsComponent },
+
+      // ================= ADMIN =================
+      {
+        path: 'admin',
         component: AdminDashboardComponent,
         canActivate: [adminGuard],
       },
     ],
   },
 
+  // ================= FALLBACK =================
   { path: '**', redirectTo: 'login' },
 ];

@@ -2,7 +2,7 @@
   <h2>Register</h2>
 
   <!-- Name -->
-  <mat-form-field appearance="outline" class="full-width">
+  <mat-form-field appearance="fill" class="full-width underline-field">
     <mat-label>Name</mat-label>
     <input matInput type="text" formControlName="name" />
 
@@ -12,7 +12,7 @@
   </mat-form-field>
 
   <!-- Email -->
-  <mat-form-field appearance="outline" class="full-width">
+  <mat-form-field appearance="fill" class="full-width underline-field">
     <mat-label>Email</mat-label>
     <input matInput type="email" formControlName="email" />
 
@@ -26,9 +26,14 @@
   </mat-form-field>
 
   <!-- Password -->
-  <mat-form-field appearance="outline" class="full-width">
+  <mat-form-field appearance="fill" class="full-width underline-field">
     <mat-label>Password</mat-label>
-    <input matInput type="password" formControlName="password" />
+    <input
+      matInput
+      type="password"
+      formControlName="password"
+      autocomplete="current-password"
+    />
 
     <mat-error *ngIf="registerForm.get('password')?.hasError('required')">
       Password is required
@@ -40,9 +45,14 @@
   </mat-form-field>
 
   <!-- Confirm Password -->
-  <mat-form-field appearance="outline" class="full-width">
+  <mat-form-field appearance="fill" class="full-width underline-field">
     <mat-label>Confirm Password</mat-label>
-    <input matInput type="password" formControlName="confirmPassword" />
+    <input
+      matInput
+      type="password"
+      formControlName="confirmPassword"
+      autocomplete="current-password"
+    />
 
     <mat-error
       *ngIf="registerForm.get('confirmPassword')?.hasError('required')"
@@ -57,15 +67,14 @@
 
   <button
     mat-raised-button
-    color="primary"
     type="submit"
+    class="submit-btn full-width"
     [disabled]="registerForm.invalid"
-    class="full-width"
   >
     Register
   </button>
   <div class="auth-link">
     <span>Already have an account?</span>
-    <a routerLink="/login">Login</a>
+    <a routerLink="/login"> Login</a>
   </div>
 </form>

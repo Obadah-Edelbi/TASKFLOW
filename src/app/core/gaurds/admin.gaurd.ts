@@ -6,12 +6,10 @@ export const adminGuard: CanActivateFn = () => {
   const authService = inject(AuthService);
   const router = inject(Router);
 
-  // لازم يكون مسجّل + أدمن
-  if (authService.isLoggedIn() && authService.isAdmin()) {
+  if (authService.isLoggedIn && authService.isAdmin) {
     return true;
   }
 
-  // غير مسموح → رجّعه عالداشبورد
-  router.navigate(['/dashboard']);
+  router.navigate(['/login']);
   return false;
 };

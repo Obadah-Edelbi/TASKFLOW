@@ -1,0 +1,217 @@
+/* =========================================
+   SETTINGS PAGE
+========================================= */
+
+.settings-page {
+  max-width: 900px;
+  margin: 80px auto;
+  padding: 20px;
+}
+
+/* HEADER */
+.settings-header h1 {
+  margin: 0;
+  font-size: 28px;
+  font-weight: 800;
+  color: var(--text);
+}
+
+.settings-header p {
+  margin-top: 6px;
+  color: var(--text-muted);
+}
+
+/* CARD */
+.settings-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  margin-top: 20px;
+  overflow: hidden;
+}
+
+/* DARK GLOW */
+body.dark .settings-card {
+  box-shadow: 0 10px 30px rgba(255, 255, 255, 0.05);
+}
+
+/* HEADER */
+.card-header {
+  padding: 16px;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg-elevated);
+}
+
+.card-header h3 {
+  margin: 0;
+}
+
+/* ROW */
+.setting-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 18px;
+  border-bottom: 1px solid var(--border);
+}
+
+.setting-row:last-child {
+  border-bottom: none;
+}
+
+.setting-row p {
+  margin: 4px 0 0;
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+/* SELECT */
+/* SELECT WRAPPER (optional إذا بدك شكل أحلى) */
+.setting-row select {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+
+  padding: 8px 36px 8px 12px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+
+  background: var(--card);
+  color: var(--text);
+
+  font-size: 14px;
+  font-weight: 500;
+
+  cursor: pointer;
+  outline: none;
+  transition: all 0.2s ease;
+
+  /* arrow custom */
+  background-image: url("data:image/svg+xml;utf8,<svg fill='%236b7280' height='20' viewBox='0 0 20 20' width='20' xmlns='http://www.w3.org/2000/svg'><path d='M5.25 7.5l4.75 4.75L14.75 7.5'/></svg>");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  background-size: 16px;
+}
+
+/* HOVER */
+.setting-row select:hover {
+  border-color: var(--accent);
+}
+
+/* FOCUS */
+.setting-row select:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.15);
+}
+
+/* DARK MODE */
+body.dark .setting-row select {
+  background: var(--bg-elevated);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+/* CHECKBOX */
+input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--accent);
+}
+/* TOGGLE */
+.toggle {
+  width: 42px; /* أصغر شوي */
+  height: 22px;
+  border-radius: 999px;
+  background: #cbd5e1;
+  position: relative;
+  border: none;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+/* DOT */
+.toggle .dot {
+  width: 16px; /* 🔥 أهم تعديل */
+  height: 16px;
+  background: #f1f5f9; /* soft white */
+  border-radius: 50%;
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  transition: all 0.25s ease;
+}
+
+/* ACTIVE */
+.toggle.active {
+  background: #f97316;
+}
+
+.toggle.active .dot {
+  transform: translateX(20px); /* مضبوط مع الحجم الجديد */
+}
+/* FOOTER */
+.settings-footer {
+  margin-top: 30px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.logout-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 16px;
+  border-radius: 10px;
+  border: none;
+  background: #fee2e2;
+  color: #dc2626;
+  cursor: pointer;
+}
+/* FIX FADE / GREY LOOK */
+.settings-page {
+  opacity: 1 !important;
+  background: transparent !important;
+}
+
+/* تأكيد الخلفية */
+.app-container,
+.page-container {
+  opacity: 1 !important;
+}
+
+/* خلي الكارد أوضح باللايت مود */
+body:not(.dark) .settings-card {
+  background: #ffffff !important;
+}
+
+/* نصوص أوضح */
+body:not(.dark) .settings-page {
+  color: #1e293b;
+}
+.settings-card {
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.05);
+}
+body.dark .settings-card {
+  box-shadow: 0 10px 30px rgba(255, 255, 255, 0.05);
+}
+button {
+  min-height: 0;
+}
+.profile-grid {
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  gap: 24px;
+  align-items: stretch; /* 🔥 المهم */
+}
+.profile-card {
+  height: 100%;
+}
+.profile-sidebar {
+  display: grid;
+  grid-template-rows: auto auto;
+  gap: 20px;
+}
+.profile-content {
+  display: grid;
+  grid-template-rows: auto auto;
+  gap: 20px;
+}

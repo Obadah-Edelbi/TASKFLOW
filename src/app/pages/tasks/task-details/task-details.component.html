@@ -1,0 +1,92 @@
+<div class="page-container" *ngIf="task">
+  <div class="header">
+    <button class="back-btn" (click)="goBack()">
+      <mat-icon>arrow_back</mat-icon>
+    </button>
+
+    <div class="title-section">
+      <h2>{{ task.title }}</h2>
+      <p>{{ task.description }}</p>
+    </div>
+  </div>
+
+  <div class="info-box">
+    <div class="row">
+      <span>Status</span>
+      <span class="badge" [ngClass]="'s-' + task.status">
+        {{ task.status }}
+      </span>
+    </div>
+
+    <div class="row">
+      <span>Priority</span>
+      <span class="priority" [ngClass]="'p-' + task.priority">
+        ● {{ task.priority }}
+      </span>
+    </div>
+
+    <div class="row">
+      <span>Created</span>
+      <span>{{ task.createdAt | date: "medium" }}</span>
+    </div>
+  </div>
+
+  <div class="comments-section">
+    <h3>
+      <mat-icon>chat_bubble_outline</mat-icon>
+      Comments ({{ comments.length }})
+    </h3>
+
+    <div class="comment-card" *ngFor="let c of comments; trackBy: trackById">
+      <div class="avatar">
+        {{ c.author?.name?.charAt(0) || "?" }}
+      </div>
+
+      <div class="comment-content">
+        <div class="comment-header">
+          <div>
+            <strong>{{ c.author?.name }}</strong>
+            <span>{{ c.createdAt | date: "short" }}</span>
+          </div>
+
+          <!-- ✅ ALWAYS IN DOM -->
+          <div class="comment-actions" [class.visible]="isOwner(c)">
+            <button class="icon-btn edit" (click)="editComment(c)">
+              <mat-icon>edit</mat-icon>
+            </button>
+
+            <button class="icon-btn delete" (click)="deleteComment(c._id)">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </div>
+        </div>
+
+        <p *ngIf="editingCommentId !== c._id">
+          {{ c.text }}
+        </p>
+
+        <div *ngIf="editingCommentId === c._id" class="edit-box">
+          <textarea [(ngModel)]="editText"></textarea>
+
+          <div class="edit-actions">
+            <button (click)="editingCommentId = null">Cancel</button>
+            <button (click)="updateComment(c._id)">Save</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="comment-input">
+    <textarea [(ngModel)]="newComment"></textarea>
+
+    <button
+      class="post-btn"
+      [disabled]="!newComment.trim()"
+      (click)="addComment()"
+    >
+      <mat-icon>add</mat-icon>
+      Post Comment
+    </button>
+  </div>
+</div>

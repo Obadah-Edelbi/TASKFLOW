@@ -4,36 +4,44 @@ import {
   HttpHandler,
   HttpInterceptor,
   HttpRequest,
+  HttpErrorResponse,
 } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, catchError, throwError } from 'rxjs';
 import { AuthService } from '../services/auth.service';
+import { Router } from '@angular/router';
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
-  constructor(private authService: AuthService) {}
+  constructor(
+    private authService: AuthService,
+    private router: Router,
+  ) {}
 
   intercept(
     req: HttpRequest<any>,
-    next: HttpHandler
+    next: HttpHandler,
   ): Observable<HttpEvent<any>> {
-    const token = this.authService.getToken();
-    console.log(token);
+    const token = this.authService.token;
 
-    // إذا في توكن نضيفه
+    let authReq = req;
+
     if (token) {
-      const authReq = req.clone({
+      authReq = req.clone({
         setHeaders: {
           Authorization: `Bearer ${token}`,
         },
       });
-
-      console.log('Auth header set:', authReq.headers.get('Authorization'));
-
-      // كمّل الطلب
-      return next.handle(authReq);
     }
 
-    // إذا ما في توكن → مرّر الطلب كما هو
-    return next.handle(req);
+    return next.handle(authReq).pipe(
+      catchError((error: HttpErrorResponse) => {
+        if (error.status === 401) {
+          this.authService.logout();
+          this.router.navigate(['/login']);
+        }
+
+        return throwError(() => error);
+      }),
+    );
   }
 }

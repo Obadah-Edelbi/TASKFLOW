@@ -2,85 +2,79 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { tap } from 'rxjs';
 import { environment } from '../../../environments/environments.development';
+import { User } from '../models/user.model';
+
+interface AuthResponse {
+  token: string;
+  user: User;
+}
 
 @Injectable({
-  // يخلي السيرفس متاح بكل التطبيق (Singleton)
   providedIn: 'root',
 })
 export class AuthService {
-  // رابط السيرفر الأساسي الخاص بالمستخدمين
-
   private apiUrl = `${environment.apiUrl}/users`;
 
   constructor(private http: HttpClient) {}
 
   // =========================
-  // Login — تسجيل الدخول
+  // Login
   // =========================
   login(data: { email: string; password: string }) {
-    // نبعث email + password للسيرفر
-    return this.http.post<any>(`${this.apiUrl}/login`, data).pipe(
+    return this.http.post<AuthResponse>(`${this.apiUrl}/login`, data).pipe(
       tap((res) => {
-        // نحفظ التوكن بالـ localStorage
+        localStorage.setItem('userId', res.user.id);
         localStorage.setItem('token', res.token);
 
-        // نحفظ بيانات المستخدم (بعد تحويلها لـ JSON)
+        // 🔥🔥🔥 هذا السطر الناقص
         localStorage.setItem('user', JSON.stringify(res.user));
-      })
+      }),
     );
   }
 
   // =========================
-  // Register — إنشاء حساب جديد
+  // Register
   // =========================
-  register(data: { name?: string; email?: string; password?: string }) {
-    // نبعث بيانات التسجيل للسيرفر
-    return this.http.post<any>(`${this.apiUrl}/register`, data);
+  register(data: { name: string; email: string; password: string }) {
+    return this.http.post(`${this.apiUrl}/register`, data);
   }
 
   // =========================
-  // Logout — تسجيل الخروج
+  // Logout
   // =========================
   logout() {
-    // نحذف كل البيانات المحفوظة
-    localStorage.clear();
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
   }
 
   // =========================
-  // Get Token
+  // Save Session (Private)
   // =========================
-  getToken() {
-    // نرجّع التوكن من التخزين
+  private saveSession(res: AuthResponse) {
+    localStorage.setItem('token', res.token);
+    localStorage.setItem('user', JSON.stringify(res.user));
+  }
+
+  // =========================
+  // Getters
+  // =========================
+  get token(): string | null {
     return localStorage.getItem('token');
   }
 
-  // =========================
-  // Get Logged User
-  // =========================
-  getUser() {
-    // نجيب المستخدم من التخزين
+  get user(): User | null {
     const user = localStorage.getItem('user');
-
-    // إذا موجود نعمله parse، غير هيك null
-    return user ? JSON.parse(user) : null;
+    return user ? (JSON.parse(user) as User) : null;
+  }
+  get isLoggedIn(): boolean {
+    return !!localStorage.getItem('user');
   }
 
-  // =========================
-  // Is Logged In?
-  // =========================
-  isLoggedIn(): boolean {
-    // إذا في توكن → المستخدم مسجل دخول
-    return !!this.getToken();
+  get isAdmin(): boolean {
+    return this.user?.role === 'admin';
   }
 
-  // =========================
-  // Is Admin?
-  // =========================
-  isAdmin(): boolean {
-    // نجيب المستخدم
-    const user = this.getUser();
-
-    // نتحقق من الدور
-    return user?.role === 'admin';
+  forgotPassword(data: { email: string }) {
+    return this.http.post(`${this.apiUrl}/forgot-password`, data);
   }
 }

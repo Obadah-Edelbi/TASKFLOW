@@ -1,0 +1,191 @@
+<div class="profile-wrapper" *ngIf="user">
+  <!-- HEADER -->
+  <div class="profile-header">
+    <div>
+      <h1>Profile Settings</h1>
+      <p>Manage your identity and personal preferences.</p>
+    </div>
+
+    <button *ngIf="!editMode" class="edit-btn" (click)="editMode = true">
+      <mat-icon>edit</mat-icon>
+      Edit Profile
+    </button>
+  </div>
+
+  <!-- GRID -->
+  <div class="profile-grid">
+    <!-- LEFT -->
+    <div class="profile-sidebar">
+      <div class="profile-card">
+        <div class="avatar-wrapper">
+          <img
+            *ngIf="user.image"
+            [src]="'http://localhost:5000' + user.image"
+          />
+          <div *ngIf="!user.image" class="avatar-placeholder">
+            {{ user.name?.charAt(0) }}
+          </div>
+
+          <label class="camera-btn">
+            <mat-icon>photo_camera</mat-icon>
+            <input type="file" (change)="onFileSelected($event)" hidden />
+          </label>
+        </div>
+
+        <h2>{{ user.name }}</h2>
+
+        <span class="role-badge" [class.admin]="user.role === 'admin'">
+          <mat-icon>
+            {{
+              user.role === "admin" ? "admin_panel_settings" : "work_outline"
+            }}
+          </mat-icon>
+          {{ user.role || "Member" }}
+        </span>
+
+        <div class="divider"></div>
+
+        <div class="stats-row">
+          <div class="stat-card">
+            <mat-icon>task_alt</mat-icon>
+            <div>
+              <strong>12</strong>
+              <span>Tasks</span>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <mat-icon>folder</mat-icon>
+            <div>
+              <strong>8</strong>
+              <span>Projects</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="profile-card">
+        <h3>Contact Details</h3>
+
+        <div class="info-item" (click)="copyEmail(user.email)">
+          <mat-icon>mail_outline</mat-icon>
+          <span>{{ user.email }}</span>
+        </div>
+
+        <div class="info-item" (click)="openLocation(user.location)">
+          <mat-icon>location_on</mat-icon>
+          <span>{{ user.location || "Not set" }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT -->
+    <div class="profile-content">
+      <div class="profile-card">
+        <div class="section-header">
+          <mat-icon>person_outline</mat-icon>
+          <h3>Personal Information</h3>
+        </div>
+
+        <div class="form-grid">
+          <div class="input-group">
+            <label>Name</label>
+            <input [(ngModel)]="user.name" [disabled]="!editMode" />
+          </div>
+
+          <div class="input-group">
+            <label>Email</label>
+            <input [(ngModel)]="user.email" [disabled]="!editMode" />
+          </div>
+
+          <div class="input-group">
+            <label>Role</label>
+            <input [(ngModel)]="user.role" [disabled]="!editMode" />
+          </div>
+
+          <div class="input-group">
+            <label>Location</label>
+            <input [(ngModel)]="user.location" [disabled]="!editMode" />
+          </div>
+
+          <div class="input-group full">
+            <label>Bio</label>
+            <textarea [(ngModel)]="user.bio" [disabled]="!editMode"></textarea>
+          </div>
+        </div>
+
+        <div class="form-actions" *ngIf="editMode">
+          <button class="cancel-btn" (click)="cancelEdit()">Cancel</button>
+
+          <button class="save-btn" (click)="save()" [disabled]="loading">
+            <mat-icon *ngIf="!loading">save</mat-icon>
+            {{ loading ? "Saving..." : "Save Changes" }}
+          </button>
+        </div>
+      </div>
+
+      <div class="profile-card">
+        <div class="section-header">
+          <mat-icon>shield</mat-icon>
+          <h3>Account Security</h3>
+        </div>
+
+        <div class="security-banner">
+          <div>
+            <strong>Two-Factor Authentication</strong>
+            <p>Add an extra layer of security</p>
+          </div>
+
+          <button class="action-btn">Enable</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 🔥 CROPPER MODAL -->
+  <div *ngIf="showCropper" class="cropper-overlay">
+    <div class="cropper-box">
+      <!-- HEADER -->
+      <div class="cropper-header">
+        <h3>Crop Profile Photo</h3>
+        <button (click)="resetCropper()">
+          <mat-icon>close</mat-icon>
+        </button>
+      </div>
+
+      <!-- IMAGE -->
+      <div class="cropper-container">
+        <image-cropper
+          [imageChangedEvent]="imageChangedEvent"
+          [maintainAspectRatio]="true"
+          [aspectRatio]="1"
+          [containWithinAspectRatio]="true"
+          [roundCropper]="true"
+          [transform]="{ scale: zoom }"
+          format="png"
+          (imageCropped)="imageCropped($event)"
+        ></image-cropper>
+      </div>
+
+      <!-- ZOOM -->
+      <div class="zoom-control">
+        <label>ZOOM</label>
+        <input type="range" [(ngModel)]="zoom" min="1" max="3" step="0.1" />
+      </div>
+
+      <!-- ACTIONS -->
+      <div class="crop-actions">
+        <button class="cancel" (click)="resetCropper()">Cancel</button>
+        <button class="apply" (click)="saveCropped()">Apply</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- LOADING -->
+  <div *ngIf="loading" class="loading-overlay">
+    <div class="loader-box">
+      <mat-spinner diameter="40"></mat-spinner>
+      <p>Saving your changes...</p>
+    </div>
+  </div>
+</div>

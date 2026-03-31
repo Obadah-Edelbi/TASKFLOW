@@ -32,7 +32,7 @@ export class LoginComponent {
     private authService: AuthService,
     private fb: FormBuilder,
     private router: Router,
-    private toastr: ToastrService
+    private toastr: ToastrService,
   ) {}
 
   loginForm = this.fb.nonNullable.group({
@@ -47,10 +47,11 @@ export class LoginComponent {
 
     this.authService.login(this.loginForm.value as any).subscribe({
       next: (res) => {
+        localStorage.setItem('userId', res.user.id);
         if (res.user.role === 'admin') {
-          this.router.navigate(['/admin']);
+          this.router.navigate(['/dashboard/admin']);
         } else {
-          this.toastr.success('welcome back 👋!', 'Loin Successful');
+          this.toastr.success('welcome back👋!', 'Login Successful');
           this.router.navigate(['/dashboard']);
         }
       },

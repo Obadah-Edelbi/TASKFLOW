@@ -1,37 +1,329 @@
-/* You can add global styles to this file, and also import other style files */
-
 @import "ngx-toastr/toastr";
+
+/* =========================================
+   VARIABLES (UNIFIED)
+========================================= */
+:root {
+  /* COLORS */
+  --success: #10b981;
+  --warning: #f59e0b;
+  --danger: #ef4444;
+  --info: #6366f1;
+
+  /* LIGHT THEME */
+  --bg: #e9edf3;
+  --bg-elevated: #f5f7fb;
+  --bg-gradient: linear-gradient(135deg, #e9edf3, #dde3ec);
+
+  --card: #f5f7fb;
+  --card-hover: #e8edf4;
+
+  --border: #cfd6e1;
+
+  --text: #1e293b;
+  --text-muted: #64748b;
+
+  --accent: #e46b1b;
+  --button-text: #ffffff;
+
+  --shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+  --btn-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
+}
+
+/* DARK MODE */
+body.dark {
+  --bg: #0b1220;
+  --bg-elevated: #1e293b;
+  --bg-gradient: linear-gradient(135deg, #0b1220, #16213a);
+
+  --card: #1e293b;
+  --card-hover: #263349;
+
+  --border: #334155;
+
+  --text: #f1f5f9;
+  --text-muted: #94a3b8;
+
+  --accent: #ff8c42;
+
+  --shadow: 0 8px 30px rgba(255, 255, 255, 0.06);
+  --btn-shadow: 0 6px 20px rgba(255, 255, 255, 0.08);
+}
+
+/* =========================================
+   BASE RESET
+========================================= */
+* {
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 16px;
+}
+
+@media (max-width: 768px) {
+  html {
+    font-size: 14px;
+  }
+}
 
 html,
 body {
+  width: 100%;
   height: 100%;
-}
-body {
   margin: 0;
-  font-family: Roboto, "Helvetica Neue", sans-serif;
+  font-family: "Inter", sans-serif;
+  overflow-x: hidden;
 }
 
-:root {
-  --bg-color: #f4f6f8;
-  --card-bg: #ffffff;
-  --text-color: #333;
-  --primary: #3f51b5;
-  --error: #f44336;
-}
-
-body.dark {
-  --bg-color: #121212;
-  --card-bg: #1e1e1e;
-  --text-color: #e0e0e0;
-  --primary: #90caf9;
-}
 body {
-  background: linear-gradient(135deg, #eef2f7, #e3e8ee);
   min-height: 100vh;
-  margin: 0;
-  font-family: Roboto, sans-serif;
+  background: var(--bg-gradient);
+  color: var(--text);
+  transition:
+    background 0.3s,
+    color 0.3s;
+  overflow-y: auto;
 }
 
-body.dark {
-  background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+/* =========================================
+   LAYOUT
+========================================= */
+.app-container {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 24px;
+}
+
+@media (max-width: 768px) {
+  .app-container {
+    padding: 16px;
+  }
+}
+
+.section {
+  margin-bottom: 32px;
+}
+
+/* =========================================
+   RESPONSIVE
+========================================= */
+@media (max-width: 1024px) {
+  .wrap {
+    padding: 20px;
+  }
+
+  .stats {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .wrap {
+    padding: 16px;
+  }
+
+  .topbar {
+    padding: 0 16px;
+  }
+
+  .logo-text,
+  .nav-links a span {
+    display: none;
+  }
+
+  .stats {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+
+  .thead {
+    display: none;
+  }
+
+  .trow {
+    grid-template-columns: 1fr;
+    gap: 12px;
+    padding: 16px;
+  }
+
+  .td.center,
+  .td.right {
+    justify-content: flex-start;
+  }
+
+  .auth-form {
+    width: 90%;
+  }
+}
+
+/* =========================================
+   MATERIAL FIXES
+========================================= */
+.mat-mdc-input-element {
+  color: var(--text) !important;
+}
+
+.mat-mdc-input-element::placeholder,
+.mat-mdc-floating-label {
+  color: var(--text-muted) !important;
+}
+
+.mdc-notched-outline__leading,
+.mdc-notched-outline__notch,
+.mdc-notched-outline__trailing {
+  border-color: var(--border) !important;
+}
+
+/* BUTTON */
+.mat-mdc-raised-button {
+  background: var(--accent) !important;
+  color: var(--button-text) !important;
+  border-radius: 12px !important;
+  font-weight: 600 !important;
+  padding: 8px 20px !important;
+  transition: 0.2s;
+}
+
+.mat-mdc-raised-button:hover {
+  transform: translateY(-2px);
+}
+
+.mat-mdc-raised-button:disabled {
+  background: #cbd5e1 !important;
+  color: #64748b !important;
+  box-shadow: none !important;
+}
+
+/* SELECT */
+.mat-mdc-select-value,
+.mat-mdc-select-arrow svg {
+  color: var(--text) !important;
+  fill: var(--text) !important;
+}
+
+body.dark .mat-mdc-select-panel {
+  background: var(--card) !important;
+}
+
+/* =========================================
+   COMPONENTS
+========================================= */
+.card,
+.stat {
+  box-shadow: var(--shadow);
+  transition: 0.25s;
+}
+
+.card:hover,
+.stat:hover {
+  transform: translateY(-3px);
+}
+
+.create-btn {
+  box-shadow: var(--btn-shadow);
+  transition: 0.25s;
+}
+
+.create-btn:hover {
+  transform: translateY(-2px);
+}
+
+/* =========================================
+   SWEETALERT + TOAST
+========================================= */
+.swal2-popup {
+  background: var(--card) !important;
+  color: var(--text) !important;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+}
+
+.toast-success {
+  background: #16a34a !important;
+}
+.toast-error {
+  background: #dc2626 !important;
+}
+.toast-info {
+  background: #2563eb !important;
+}
+.toast-warning {
+  background: #f59e0b !important;
+}
+
+/* =========================================
+   MENU (MERGED CLEAN)
+========================================= */
+body.dark .mat-mdc-menu-panel {
+  background: rgba(30, 41, 59, 0.75) !important;
+  backdrop-filter: blur(14px);
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: #f1f5f9 !important;
+}
+
+body.dark .mat-mdc-menu-item:hover {
+  background: rgba(255, 255, 255, 0.08) !important;
+}
+
+/* =========================================
+   PAGE
+========================================= */
+.page-container {
+  max-width: 720px;
+  margin: 40px auto;
+  padding: 24px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  box-shadow: var(--shadow);
+}
+
+/* =========================================
+   INPUT + COMMENTS
+========================================= */
+textarea {
+  background: transparent;
+  color: var(--text);
+}
+
+textarea::placeholder {
+  color: var(--text-muted);
+}
+
+.comment-input {
+  border: 2px dashed var(--border);
+}
+
+.post-btn {
+  background: var(--accent);
+  color: var(--button-text);
+}
+
+.post-btn:hover {
+  filter: brightness(1.1);
+}
+
+/* =========================================
+   SMALL FIXES
+========================================= */
+button {
+  min-height: 44px;
+}
+
+app-navbar + * {
+  margin-top: 24px;
+}
+body.dark .dropdown-menu {
+  color: #ffffff;
+}
+
+body.dark .dropdown-item {
+  color: #ffffff !important;
+}
+
+body.dark .dropdown-item i,
+body.dark .dropdown-item mat-icon {
+  color: #ffffff !important;
 }
