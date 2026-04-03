@@ -35,7 +35,7 @@ export class NavbarComponent implements OnInit {
   notifications: any[] = [];
   unreadCount = 0;
   showDropdown = false;
-
+  imageError = false;
   showUserMenu = false;
   activeTab = 'Tasks';
   visibleNavLinks: any[] = [];

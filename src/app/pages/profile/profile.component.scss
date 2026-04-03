@@ -232,8 +232,8 @@ h2 {
 .cropper-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.75);
-  backdrop-filter: blur(10px);
+  background: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(12px);
 
   display: flex;
   align-items: center;
@@ -241,16 +241,30 @@ h2 {
 
   z-index: 9999;
 }
-
 .cropper-box {
   width: 520px;
   max-width: 90vw;
 
-  background: #18181b;
-  border-radius: 16px;
+  background: linear-gradient(145deg, #1e293b, #0f172a);
+  border-radius: 18px;
   overflow: hidden;
 
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+  box-shadow:
+    0 25px 80px rgba(0, 0, 0, 0.7),
+    0 0 0 1px rgba(255, 255, 255, 0.05);
+
+  animation: modalFade 0.25s ease;
+}
+
+@keyframes modalFade {
+  from {
+    opacity: 0;
+    transform: translateY(15px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
 }
 
 .cropper-header {
@@ -317,26 +331,49 @@ h2 {
 /* ================= ACTION BUTTONS ================= */
 .crop-actions {
   display: flex;
-  gap: 10px;
+  gap: 12px;
   padding: 16px;
-
-  button {
-    flex: 1;
-    padding: 10px;
-    border-radius: 10px;
-  }
-
-  .cancel {
-    background: #27272a;
-    color: #d4d4d8;
-  }
-
-  .apply {
-    background: var(--accent);
-    color: white;
-  }
 }
 
+.crop-actions button {
+  flex: 1;
+  padding: 10px;
+  border-radius: 12px;
+  font-weight: 600;
+  cursor: pointer;
+
+  transition: all 0.25s ease;
+}
+
+/* CANCEL */
+.crop-actions .cancel {
+  background: rgba(255, 255, 255, 0.05);
+  color: #a1a1aa;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.crop-actions .cancel:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+  transform: translateY(-1px);
+}
+
+/* APPLY 🔥 */
+.crop-actions .apply {
+  background: linear-gradient(135deg, #3b82f6, #2563eb);
+  color: white;
+
+  box-shadow: 0 6px 18px rgba(37, 99, 235, 0.4);
+}
+
+.crop-actions .apply:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(37, 99, 235, 0.6);
+}
+
+.crop-actions .apply:active {
+  transform: scale(0.96);
+}
 /* EDIT PROFILE cancel button */
 .cancel-btn {
   background: transparent;
