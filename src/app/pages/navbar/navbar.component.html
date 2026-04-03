@@ -1,144 +1,121 @@
-<nav class="topbar" *ngIf="isLoggedIn">
-  <div class="topbar-container">
-    <div class="topbar-content">
-      <!-- LEFT -->
-      <div class="left-section">
-        <div class="logo-section" [routerLink]="['/dashboard']">
-          <div class="logo-icon">
-            <mat-icon>task_alt</mat-icon>
-          </div>
-          <span class="logo-text">TaskFlow</span>
+<nav class="navbar" *ngIf="isLoggedIn">
+  <div class="navbar-container">
+    <!-- LEFT -->
+    <div class="left-section">
+      <!-- LOGO -->
+      <div class="logo" (click)="setActiveTab('Tasks', '/dashboard/tasks')">
+        <div class="logo-icon">
+          <mat-icon>task_alt</mat-icon>
         </div>
-
-        <div class="nav-links-desktop">
-          <button
-            *ngFor="let link of visibleNavLinks"
-            (click)="setActiveTab(link.name, link.route)"
-            [class.active]="activeTab === link.name"
-            class="nav-link-btn"
-          >
-            <mat-icon>{{ link.icon }}</mat-icon>
-            {{ link.name }}
-          </button>
-        </div>
+        <span>TaskFlow</span>
       </div>
 
-      <!-- RIGHT -->
-      <div class="right-section">
-        <!-- THEME -->
-        <button class="icon-btn" (click)="toggleTheme()">
-          <mat-icon>dark_mode</mat-icon>
-        </button>
-
-        <!-- 🔔 NOTIFICATIONS -->
+      <!-- LINKS -->
+      <div class="nav-links">
         <button
-          class="icon-btn notification-btn"
-          [matMenuTriggerFor]="notifMenu"
-          (click)="markAllAsRead()"
+          *ngFor="let link of visibleNavLinks"
+          class="nav-btn"
+          [class.active]="activeTab === link.name"
+          (click)="setActiveTab(link.name, link.route)"
         >
+          <mat-icon>{{ link.icon }}</mat-icon>
+          {{ link.name }}
+        </button>
+      </div>
+    </div>
+
+    <!-- RIGHT -->
+    <div class="right-section">
+      <!-- 🌙 THEME -->
+      <button
+        class="theme-btn"
+        (click)="toggleTheme()"
+        [ngClass]="isDarkMode ? 'dark-btn' : 'light-btn'"
+      >
+        <mat-icon *ngIf="isDarkMode">light_mode</mat-icon>
+        <mat-icon *ngIf="!isDarkMode">dark_mode</mat-icon>
+      </button>
+
+      <div class="divider"></div>
+
+      <!-- 🔔 NOTIFICATIONS -->
+      <div class="notif">
+        <button class="icon-btn" (click)="toggleDropdown($event)">
           <mat-icon>notifications</mat-icon>
 
-          <span *ngIf="unreadCount > 0" class="notification-badge">
+          <span class="badge" *ngIf="unreadCount > 0">
             {{ unreadCount }}
           </span>
         </button>
 
-        <!-- 🔔 MENU -->
-        <mat-menu #notifMenu="matMenu" class="notif-menu">
-          <!-- HEADER -->
+        <!-- DROPDOWN -->
+        <div class="notif-dropdown" *ngIf="showDropdown">
           <div class="notif-header">
             <span>Notifications</span>
-            <button *ngIf="notifications.length" (click)="clearAll()">
-              Clear
-            </button>
+            <button (click)="clearAll()">Clear all</button>
           </div>
 
-          <!-- EMPTY -->
-          <div *ngIf="notifications.length === 0" class="notif-empty">
-            No notifications
-          </div>
+          <div class="notif-list">
+            <div
+              class="notif-item"
+              *ngFor="let n of notifications; let i = index"
+              (click)="markOneAsRead(i)"
+            >
+              <div class="message">{{ n.message }}</div>
+              <div class="time">{{ timeAgo(n.createdAt) }}</div>
+            </div>
 
-          <!-- ITEMS -->
+            <!-- EMPTY -->
+            <div class="empty" *ngIf="notifications.length === 0">
+              No notifications
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <!-- 👤 USER -->
+      <div class="user" (click)="toggleUserMenu($event)">
+        <div class="avatar">
+          {{ username?.charAt(0) }}
+        </div>
+
+        <div class="user-info">
+          <span class="name">{{ username }}</span>
+          <span class="role">ADMIN</span>
+        </div>
+
+        <mat-icon class="arrow">expand_more</mat-icon>
+
+        <!-- DROPDOWN -->
+        <div class="user-dropdown" *ngIf="showUserMenu">
           <button
-            mat-menu-item
-            *ngFor="let n of notifications"
-            (click)="markOneAsRead(n)"
-            class="notif-item"
-            [class.unread]="!n.read"
+            (click)="
+              setActiveTab('Profile', '/dashboard/profile');
+              showUserMenu = false
+            "
           >
-            <div class="notif-content">
-              <div class="notif-message">
-                {{ n.message }}
-              </div>
-
-              <div class="notif-time">
-                {{ timeAgo(n.createdAt) }}
-              </div>
-            </div>
-          </button>
-        </mat-menu>
-
-        <div class="divider"></div>
-
-        <!-- USER -->
-        <div class="user-menu-wrapper">
-          <button (click)="toggleUserMenu($event)" class="user-menu-trigger">
-            <div class="user-avatar">
-              <div class="nav-user">
-                <img
-                  *ngIf="authService.user?.image"
-                  [src]="'http://localhost:5000' + authService.user?.image"
-                />
-
-                <div
-                  *ngIf="!authService.user?.image"
-                  class="avatar-placeholder"
-                >
-                  {{ authService.user?.name?.charAt(0) }}
-                </div>
-              </div>
-            </div>
-            <div class="user-text">
-              <p class="user-name">{{ username }}</p>
-
-              <!-- Admin -->
-              <span
-                *ngIf="authService.user?.role === 'admin'"
-                class="role-admin"
-              >
-                <mat-icon>admin_panel_settings</mat-icon>
-                Admin
-              </span>
-
-              <!-- User -->
-              <span *ngIf="authService.user?.role === 'user'" class="role-user">
-                <mat-icon>person</mat-icon>
-                User
-              </span>
-            </div>
-            <mat-icon class="chevron" [class.rotated]="showUserMenu">
-              expand_more
-            </mat-icon>
+            <mat-icon>person</mat-icon>
+            Profile
           </button>
 
-          <!-- DROPDOWN -->
-          <div *ngIf="showUserMenu" class="dropdown-menu">
-            <button routerLink="/dashboard/profile" class="dropdown-item">
-              <mat-icon>person</mat-icon>
-              <span>Profile</span>
-            </button>
+          <button
+            (click)="
+              setActiveTab('Settings', '/dashboard/settings');
+              showUserMenu = false
+            "
+          >
+            <mat-icon>settings</mat-icon>
+            Settings
+          </button>
 
-            <button routerLink="/dashboard/settings" class="dropdown-item">
-              <mat-icon>settings</mat-icon>
-              <span>Settings</span>
-            </button>
-            <div class="dropdown-divider"></div>
+          <div class="divider"></div>
 
-            <button (click)="logout()" class="dropdown-item logout">
-              <mat-icon>logout</mat-icon>
-              Sign out
-            </button>
-          </div>
+          <button class="logout" (click)="logout()">
+            <mat-icon>logout</mat-icon>
+            Sign out
+          </button>
         </div>
       </div>
     </div>

@@ -100,7 +100,7 @@
     </div>
 
     <!-- ================= EMPTY STATE ================= -->
-    <div *ngIf="!loading && pagedTasks.length === 0" class="empty-wrapper">
+    <!-- <div *ngIf="!loading && pagedTasks.length === 0" class="empty-wrapper">
       <div class="empty-card">
         <div class="icon-wrapper">
           <mat-icon>folder_off</mat-icon>
@@ -110,6 +110,25 @@
 
         <p>Your search or filter criteria didn’t match any records.</p>
       </div>
+    </div> -->
+
+    <!-- EMPTY (no tasks at all) -->
+    <div *ngIf="tasks.length === 0 && !searchTerm" class="empty-state">
+      <mat-icon>assignment</mat-icon>
+
+      <h3>No tasks yet</h3>
+
+      <p>You don’t have any tasks. Start by creating your first one 🚀</p>
+
+      <button class="create-btn" (click)="createTask()">+ Create Task</button>
+    </div>
+
+    <div *ngIf="tasks.length === 0 && searchTerm" class="empty-state">
+      <mat-icon>search_off</mat-icon>
+
+      <h3>No results found</h3>
+
+      <p>Try changing your search or filters</p>
     </div>
 
     <!-- ================= TABLE ================= -->

@@ -303,6 +303,7 @@ export class TasksComponent implements OnInit {
         });
       });
   }
+
   // ================= STATS =================
 
   get totalTasks(): number {

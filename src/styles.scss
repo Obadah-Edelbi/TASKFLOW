@@ -1,23 +1,18 @@
 @import "ngx-toastr/toastr";
 
-/* =========================================
-   VARIABLES (UNIFIED)
-========================================= */
+/* =========================
+   VARIABLES
+========================= */
 :root {
-  /* COLORS */
   --success: #10b981;
   --warning: #f59e0b;
   --danger: #ef4444;
   --info: #6366f1;
 
-  /* LIGHT THEME */
+  /* LIGHT */
   --bg: #e9edf3;
-  --bg-elevated: #f5f7fb;
   --bg-gradient: linear-gradient(135deg, #e9edf3, #dde3ec);
-
   --card: #f5f7fb;
-  --card-hover: #e8edf4;
-
   --border: #cfd6e1;
 
   --text: #1e293b;
@@ -25,146 +20,49 @@
 
   --accent: #e46b1b;
   --button-text: #ffffff;
+  --card: #ffffff;
+  --card-hover: #f3f4f6;
+  --border: #e5e7eb;
 
+  --text: #111827;
+  --text-muted: #6b7280;
+
+  --accent: #f97316;
   --shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
-  --btn-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
 }
 
-/* DARK MODE */
+/* DARK */
 body.dark {
   --bg: #0b1220;
-  --bg-elevated: #1e293b;
   --bg-gradient: linear-gradient(135deg, #0b1220, #16213a);
-
   --card: #1e293b;
-  --card-hover: #263349;
-
   --border: #334155;
 
   --text: #f1f5f9;
   --text-muted: #94a3b8;
+  --card: #1e293b;
+  --card-hover: #334155;
+  --border: rgba(255, 255, 255, 0.08);
 
-  --accent: #ff8c42;
-
-  --shadow: 0 8px 30px rgba(255, 255, 255, 0.06);
-  --btn-shadow: 0 6px 20px rgba(255, 255, 255, 0.08);
+  --accent: #f97316;
 }
 
-/* =========================================
-   BASE RESET
-========================================= */
-* {
-  box-sizing: border-box;
-}
-
-html {
-  font-size: 16px;
-}
-
-@media (max-width: 768px) {
-  html {
-    font-size: 14px;
-  }
-}
-
-html,
+/* =========================
+   BASE
+========================= */
 body {
-  width: 100%;
-  height: 100%;
-  margin: 0;
-  font-family: "Inter", sans-serif;
-  overflow-x: hidden;
-}
-
-body {
-  min-height: 100vh;
   background: var(--bg-gradient);
   color: var(--text);
-  transition:
-    background 0.3s,
-    color 0.3s;
-  overflow-y: auto;
+  font-family: "Inter", sans-serif;
 }
 
-/* =========================================
-   LAYOUT
-========================================= */
-.app-container {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 24px;
-}
-
-@media (max-width: 768px) {
-  .app-container {
-    padding: 16px;
-  }
-}
-
-.section {
-  margin-bottom: 32px;
-}
-
-/* =========================================
-   RESPONSIVE
-========================================= */
-@media (max-width: 1024px) {
-  .wrap {
-    padding: 20px;
-  }
-
-  .stats {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-@media (max-width: 768px) {
-  .wrap {
-    padding: 16px;
-  }
-
-  .topbar {
-    padding: 0 16px;
-  }
-
-  .logo-text,
-  .nav-links a span {
-    display: none;
-  }
-
-  .stats {
-    grid-template-columns: 1fr;
-    gap: 14px;
-  }
-
-  .thead {
-    display: none;
-  }
-
-  .trow {
-    grid-template-columns: 1fr;
-    gap: 12px;
-    padding: 16px;
-  }
-
-  .td.center,
-  .td.right {
-    justify-content: flex-start;
-  }
-
-  .auth-form {
-    width: 90%;
-  }
-}
-
-/* =========================================
-   MATERIAL FIXES
-========================================= */
+/* =========================
+   MATERIAL INPUT
+========================= */
 .mat-mdc-input-element {
   color: var(--text) !important;
 }
 
-.mat-mdc-input-element::placeholder,
 .mat-mdc-floating-label {
   color: var(--text-muted) !important;
 }
@@ -175,155 +73,277 @@ body {
   border-color: var(--border) !important;
 }
 
-/* BUTTON */
+/* =========================
+   BUTTONS
+========================= */
 .mat-mdc-raised-button {
   background: var(--accent) !important;
   color: var(--button-text) !important;
   border-radius: 12px !important;
-  font-weight: 600 !important;
-  padding: 8px 20px !important;
-  transition: 0.2s;
 }
 
-.mat-mdc-raised-button:hover {
-  transform: translateY(-2px);
+.mat-mdc-button {
+  color: var(--text-muted) !important;
 }
 
-.mat-mdc-raised-button:disabled {
-  background: #cbd5e1 !important;
-  color: #64748b !important;
-  box-shadow: none !important;
-}
-
-/* SELECT */
-.mat-mdc-select-value,
-.mat-mdc-select-arrow svg {
+.mat-mdc-button:hover {
   color: var(--text) !important;
-  fill: var(--text) !important;
+}
+
+/* =========================
+   DIALOG (FIX)
+========================= */
+.cdk-overlay-pane.modern-dialog .mdc-dialog__surface {
+  background: var(--card) !important;
+  color: var(--text) !important;
+  border-radius: 16px !important;
+  padding: 24px !important;
+}
+
+.mat-mdc-dialog-title {
+  color: var(--text) !important;
+}
+
+.cdk-overlay-backdrop {
+  background: rgba(0, 0, 0, 0.7) !important;
+}
+
+/* =========================
+   SELECT (THEME FIX)
+========================= */
+
+/* panel */
+body:not(.dark) .mat-mdc-select-panel {
+  background: #ffffff !important;
+  color: #1e293b !important;
 }
 
 body.dark .mat-mdc-select-panel {
   background: var(--card) !important;
-}
-
-/* =========================================
-   COMPONENTS
-========================================= */
-.card,
-.stat {
-  box-shadow: var(--shadow);
-  transition: 0.25s;
-}
-
-.card:hover,
-.stat:hover {
-  transform: translateY(-3px);
-}
-
-.create-btn {
-  box-shadow: var(--btn-shadow);
-  transition: 0.25s;
-}
-
-.create-btn:hover {
-  transform: translateY(-2px);
-}
-
-/* =========================================
-   SWEETALERT + TOAST
-========================================= */
-.swal2-popup {
-  background: var(--card) !important;
   color: var(--text) !important;
-  border: 1px solid var(--border);
-  border-radius: 12px;
 }
 
-.toast-success {
-  background: #16a34a !important;
-}
-.toast-error {
-  background: #dc2626 !important;
-}
-.toast-info {
-  background: #2563eb !important;
-}
-.toast-warning {
-  background: #f59e0b !important;
+/* options */
+body:not(.dark) .mat-mdc-option {
+  color: #1e293b !important;
 }
 
-/* =========================================
-   MENU (MERGED CLEAN)
-========================================= */
-body.dark .mat-mdc-menu-panel {
-  background: rgba(30, 41, 59, 0.75) !important;
-  backdrop-filter: blur(14px);
-  border-radius: 14px;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  color: #f1f5f9 !important;
+body.dark .mat-mdc-option {
+  color: var(--text) !important;
 }
 
-body.dark .mat-mdc-menu-item:hover {
-  background: rgba(255, 255, 255, 0.08) !important;
+/* hover */
+body:not(.dark) .mat-mdc-option:hover {
+  background: rgba(0, 0, 0, 0.05);
 }
 
-/* =========================================
-   PAGE
-========================================= */
-.page-container {
-  max-width: 720px;
-  margin: 40px auto;
-  padding: 24px;
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 18px;
-  box-shadow: var(--shadow);
+body.dark .mat-mdc-option:hover {
+  background: rgba(255, 255, 255, 0.08);
 }
 
-/* =========================================
-   INPUT + COMMENTS
-========================================= */
-textarea {
-  background: transparent;
-  color: var(--text);
+/* selected */
+.mat-mdc-option.mdc-list-item--selected {
+  color: var(--accent) !important;
+}
+/* ===== SELECT TEXT + ARROW FIX ===== */
+
+/* النص المختار */
+.mat-mdc-select-value {
+  color: var(--text) !important;
 }
 
-textarea::placeholder {
-  color: var(--text-muted);
+/* السهم */
+.mat-mdc-select-arrow svg {
+  fill: var(--text) !important;
 }
 
-.comment-input {
-  border: 2px dashed var(--border);
+/* إذا في icon بدل svg */
+.mat-mdc-select-arrow {
+  color: var(--text) !important;
 }
 
-.post-btn {
-  background: var(--accent);
-  color: var(--button-text);
+/* =========================
+   RESPONSIVE SYSTEM
+========================= */
+
+/* MOBILE */
+@media (max-width: 768px) {
+  .app-container {
+    padding: 16px !important;
+  }
+
+  /* cards */
+  .stats {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* buttons */
+  .create-btn {
+    width: 100%;
+  }
+
+  /* tables */
+  .trow {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* dialog */
+  .cdk-overlay-pane.modern-dialog {
+    width: 95vw !important;
+  }
 }
 
-.post-btn:hover {
-  filter: brightness(1.1);
+/* TABLET */
+@media (max-width: 1024px) {
+  .stats {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }
 
-/* =========================================
-   SMALL FIXES
-========================================= */
-button {
-  min-height: 44px;
+/* SMALL MOBILE */
+@media (max-width: 480px) {
+  html {
+    font-size: 14px;
+  }
+
+  .page-container {
+    padding: 16px;
+  }
+}
+/* ================= APP BACKGROUND ================= */
+
+body {
+  background:
+    radial-gradient(
+      circle at 20% 20%,
+      rgba(255, 120, 0, 0.12),
+      transparent 40%
+    ),
+    radial-gradient(
+      circle at 80% 30%,
+      rgba(59, 130, 246, 0.12),
+      transparent 40%
+    ),
+    radial-gradient(
+      circle at 50% 80%,
+      rgba(34, 197, 94, 0.08),
+      transparent 40%
+    ),
+    linear-gradient(180deg, #0b1220 0%, #0f172a 100%);
+
+  background-attachment: fixed;
+}
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+
+  background: radial-gradient(
+    circle at 30% 40%,
+    rgba(255, 120, 0, 0.08),
+    transparent 50%
+  );
+
+  animation: floatBg 12s ease-in-out infinite alternate;
+  pointer-events: none;
 }
 
-app-navbar + * {
-  margin-top: 24px;
+@keyframes floatBg {
+  from {
+    transform: translateY(0px);
+  }
+  to {
+    transform: translateY(40px);
+  }
 }
-body.dark .dropdown-menu {
-  color: #ffffff;
+/* ================= LIGHT MODE ================= */
+
+body.dark {
+  background:
+    radial-gradient(circle at 20% 20%, rgba(255, 120, 0, 0.1), transparent 40%),
+    radial-gradient(
+      circle at 80% 30%,
+      rgba(59, 130, 246, 0.1),
+      transparent 40%
+    ),
+    radial-gradient(
+      circle at 50% 80%,
+      rgba(34, 197, 94, 0.06),
+      transparent 40%
+    ),
+    linear-gradient(180deg, #0b1220, #0f172a);
+
+  background-attachment: fixed;
 }
 
-body.dark .dropdown-item {
-  color: #ffffff !important;
+body.dark::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+
+  background: radial-gradient(
+    circle at 30% 40%,
+    rgba(255, 120, 0, 0.06),
+    transparent 50%
+  );
+  animation: floatBg 12s ease-in-out infinite alternate;
+  pointer-events: none;
 }
 
-body.dark .dropdown-item i,
-body.dark .dropdown-item mat-icon {
-  color: #ffffff !important;
+body:not(.dark) {
+  background:
+    radial-gradient(
+      circle at 15% 20%,
+      rgba(255, 120, 0, 0.04),
+      transparent 35%
+    ),
+    radial-gradient(
+      circle at 85% 25%,
+      rgba(59, 130, 246, 0.04),
+      transparent 35%
+    ),
+    radial-gradient(
+      circle at 50% 80%,
+      rgba(34, 197, 94, 0.03),
+      transparent 40%
+    ),
+    linear-gradient(180deg, #f8fafc, #eef2f7);
+
+  background-attachment: fixed;
+}
+@keyframes floatLight {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(40px);
+  }
+}
+body:not(.dark) {
+  background:
+    radial-gradient(
+      circle at 15% 20%,
+      rgba(255, 120, 0, 0.08),
+      transparent 40%
+    ),
+    radial-gradient(
+      circle at 85% 25%,
+      rgba(59, 130, 246, 0.08),
+      transparent 40%
+    ),
+    radial-gradient(
+      circle at 50% 90%,
+      rgba(34, 197, 94, 0.06),
+      transparent 50%
+    ),
+    linear-gradient(180deg, #f8fafc 0%, #eef2f7 100%);
+
+  background-attachment: fixed;
+}
+
+.wrap {
+  background-color: transparent !important;
+}
+.card {
+  background: var(--card); /* خليه */
 }

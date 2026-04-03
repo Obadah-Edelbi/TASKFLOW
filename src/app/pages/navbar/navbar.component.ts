@@ -39,12 +39,24 @@ export class NavbarComponent implements OnInit {
   showUserMenu = false;
   activeTab = 'Tasks';
   visibleNavLinks: any[] = [];
+  isDarkMode = false;
 
   // ================= INIT =================
   ngOnInit() {
     this.buildNavLinks();
 
-    // 🔥 REALTIME (عن طريق service فقط)
+    // ✅ LOAD THEME FROM LOCAL STORAGE
+    const savedTheme = localStorage.getItem('theme');
+
+    if (savedTheme === 'dark') {
+      this.isDarkMode = true;
+      document.body.classList.add('dark');
+    } else {
+      this.isDarkMode = false;
+      document.body.classList.remove('dark');
+    }
+
+    // 🔥 REALTIME notifications (your existing code)
     this.notificationService.onNotification((notif: any) => {
       const exists = this.notifications.some((n) => n._id === notif._id);
       if (exists) return;
@@ -52,8 +64,6 @@ export class NavbarComponent implements OnInit {
       const newNotif = {
         ...notif,
         read: false,
-
-        // 🔥 fix NaN نهائي
         createdAt: notif.createdAt ? new Date(notif.createdAt) : new Date(),
       };
 
@@ -63,16 +73,29 @@ export class NavbarComponent implements OnInit {
       this.toastr.info(notif.message);
     });
   }
+  @HostListener('document:click', ['$event'])
+  handleClickOutside(event: Event) {
+    const target = event.target as HTMLElement;
 
-  // ================= LOAD =================
+    if (!target.closest('.notif')) {
+      this.showDropdown = false;
+    }
+
+    if (!target.closest('.user')) {
+      this.showUserMenu = false;
+    }
+  }
 
   // ================= DROPDOWN =================
-  toggleDropdown() {
+  toggleDropdown(event: MouseEvent) {
+    event.stopPropagation(); // 🔥 FIX
     this.showDropdown = !this.showDropdown;
 
     if (this.showDropdown) {
       this.markAllAsRead();
     }
+
+    this.showUserMenu = false; // optional (close user menu)
   }
   // ================= READ =================
   markAllAsRead() {
@@ -163,11 +186,7 @@ export class NavbarComponent implements OnInit {
   toggleUserMenu(event: Event) {
     event.stopPropagation();
     this.showUserMenu = !this.showUserMenu;
-  }
-
-  @HostListener('document:click')
-  closeMenu() {
-    this.showUserMenu = false;
+    this.showDropdown = false; // close notif
   }
 
   logout() {
@@ -176,12 +195,16 @@ export class NavbarComponent implements OnInit {
   }
 
   toggleTheme() {
-    const isDark = document.body.classList.toggle('dark');
+    this.isDarkMode = !this.isDarkMode;
 
-    // 🔥 خزّن اختيار المستخدم
-    localStorage.setItem('theme', isDark ? 'dark' : 'light');
+    if (this.isDarkMode) {
+      document.body.classList.add('dark');
+      localStorage.setItem('theme', 'dark');
+    } else {
+      document.body.classList.remove('dark');
+      localStorage.setItem('theme', 'light');
+    }
 
-    // 🔥 علّم إنه manual override
     localStorage.setItem('themeMode', 'manual');
   }
 

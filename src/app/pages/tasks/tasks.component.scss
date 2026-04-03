@@ -1,8 +1,9 @@
 /* ========================================== LAYOUT ========================================== */
 .wrap {
-  max-width: 1400px;
+  width: 100%;
+  max-width: 1200px;
   margin: 0 auto;
-  padding: 24px;
+  padding: 40px;
 }
 
 /* ========================================== HERO ========================================== */
@@ -31,9 +32,9 @@
 /* ========================================== STATS ========================================== */
 .stats {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-  gap: 22px;
   margin-bottom: 24px;
+  gap: 20px;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
 }
 
 .stat {
@@ -412,28 +413,6 @@ button[mat-icon-button]:hover mat-icon {
     opacity: 1;
     transform: translateX(0);
   }
-  50% {
-    opacity: 0.5;
-    transform: translateX(10px);
-  }
-  100% {
-    opacity: 0;
-    transform: translateX(40px);
-    height: 0;
-    margin: 0;
-    padding: 0;
-  }
-}
-.trow.removing {
-  animation: rowDelete 0.3s ease forwards;
-  pointer-events: none;
-}
-
-@keyframes rowDelete {
-  0% {
-    opacity: 1;
-    transform: translateX(0);
-  }
 
   60% {
     opacity: 0.4;
@@ -448,18 +427,6 @@ button[mat-icon-button]:hover mat-icon {
     padding: 0;
   }
 }
-.stats {
-  display: grid;
-  gap: 16px;
-
-  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-}
-.wrap {
-  width: 100%;
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 40px;
-}
 
 /* 🔥 موبايل */
 @media (max-width: 768px) {
@@ -467,14 +434,7 @@ button[mat-icon-button]:hover mat-icon {
     padding: 16px;
   }
 }
-.table-container {
-  width: 100%;
-  overflow-x: auto;
-}
-.table-container {
-  width: 100%;
-  overflow-x: auto;
-}
+
 .card {
   width: 100%;
   border-radius: 20px;
@@ -486,11 +446,6 @@ button[mat-icon-button]:hover mat-icon {
     padding-right: 12px;
   }
 }
-.stats {
-  display: grid;
-  gap: 20px;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-}
 
 /* =========================================
    FIX STAT CARDS LIGHT MODE (ADD ONLY)
@@ -501,25 +456,6 @@ body:not(.dark) .stat-card {
   background: var(--card) !important;
   border: 1px solid var(--border) !important;
   backdrop-filter: none !important;
-}
-
-/* text fix */
-body:not(.dark) .stat-text span {
-  color: var(--text-muted) !important;
-}
-
-body:not(.dark) .stat-text h2 {
-  color: var(--text) !important;
-}
-
-/* ✨ hover fix */
-body:not(.dark) .stat-card:hover {
-  background: var(--card-hover) !important;
-}
-.stats {
-  display: grid;
-  gap: 20px;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
 }
 
 /* ✅ LIGHT MODE */
@@ -606,4 +542,159 @@ body.dark .stat-text span {
 
 body.dark .stat-text h2 {
   color: #e5e7eb;
+}
+
+/* ================= MOBILE FIX (SAFE) ================= */
+@media (max-width: 768px) {
+  /* خلي الجدول scroll بدل ما ينكسر */
+  .table-container {
+    overflow-x: auto;
+  }
+
+  .table {
+    min-width: 700px;
+  }
+
+  /* filters */
+  .filters {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  /* search */
+  .search input {
+    width: 100%;
+  }
+
+  /* stats */
+  .stats {
+    grid-template-columns: 1fr;
+  }
+
+  /* hero */
+  .hero {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  /* button */
+  .create-btn {
+    width: 100%;
+    justify-content: center;
+  }
+}
+/* ========================================== EMPTY STATE (CLEAN) ========================================== */
+
+/* ================= EMPTY STATE ================= */
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  padding: 80px 20px;
+  text-align: center;
+}
+
+/* ICON */
+.empty-state mat-icon {
+  font-size: 42px;
+  width: 72px;
+  height: 72px;
+  line-height: 72px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 16px;
+  border: 1px solid var(--border);
+  background: var(--card);
+
+  color: var(--text-muted);
+  margin-bottom: 16px;
+
+  transition: 0.25s ease;
+}
+
+/* hover subtle */
+.empty-state mat-icon:hover {
+  transform: translateY(-3px) scale(1.05);
+}
+
+/* TITLE */
+.empty-state h3 {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--text);
+}
+
+/* DESCRIPTION */
+.empty-state p {
+  margin: 8px 0 18px;
+  font-size: 14px;
+  color: var(--text-muted);
+  max-width: 300px;
+  line-height: 1.5;
+}
+
+/* BUTTON */
+.empty-state .create-btn {
+  padding: 10px 22px;
+  border-radius: 14px;
+  font-weight: 600;
+
+  background: var(--accent);
+  color: #fff;
+
+  border: none;
+  cursor: pointer;
+
+  transition: 0.2s;
+}
+
+/* button hover */
+.empty-state .create-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(255, 120, 0, 0.25);
+}
+
+/* animation */
+.empty-state {
+  animation: fadeUp 0.35s ease;
+}
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ANIMATION */
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }

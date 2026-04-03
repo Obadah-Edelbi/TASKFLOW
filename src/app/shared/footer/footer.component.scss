@@ -1,0 +1,50 @@
+/* ================= FOOTER ================= */
+
+.footer {
+  margin-top: 20px;
+  padding: 12px 24px;
+
+  border-top: 1px solid var(--border);
+
+  background: rgba(255, 255, 255, 0.5);
+  backdrop-filter: blur(10px);
+}
+
+/* DARK MODE */
+.dark .footer {
+  background: rgba(15, 23, 42, 0.6);
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+/* layout */
+.footer-container {
+  max-width: 1200px;
+  margin: auto;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* text */
+.footer-left {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+/* links */
+.footer-right {
+  display: flex;
+  gap: 16px;
+}
+
+.footer-right span {
+  font-size: 12px;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.footer-right span:hover {
+  color: var(--accent);
+}

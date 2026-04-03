@@ -215,3 +215,30 @@ button {
   grid-template-rows: auto auto;
   gap: 20px;
 }
+.settings-wrapper {
+  max-width: 1100px;
+  margin: auto;
+  padding: 28px;
+  border-radius: 20px;
+
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+
+  box-shadow: var(--shadow);
+}
+:root .settings-wrapper {
+  background: rgba(255, 255, 255, 0.6);
+
+  border: 1px solid rgba(0, 0, 0, 0.08);
+
+  box-shadow:
+    0 10px 30px rgba(0, 0, 0, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.6);
+}
+.settings-wrapper {
+  transition: all 0.3s ease;
+}
+
+.settings-wrapper:hover {
+  border-color: rgba(249, 115, 22, 0.2);
+}
