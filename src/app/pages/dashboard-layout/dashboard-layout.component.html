@@ -1,6 +1,25 @@
 <app-navbar></app-navbar>
 
 <div class="app-container">
-  <router-outlet></router-outlet>
+  <div class="page-shell">
+    <router-outlet></router-outlet>
+  </div>
+
+  <footer class="app-footer">
+    <div class="footer-top">
+      <span>© 2026 TaskFlow. All rights reserved.</span>
+
+      <div class="footer-links">
+        <span>Privacy</span>
+        <span>Terms</span>
+        <span>Contact</span>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      Built with precision • Designed for productivity
+    </div>
+  </footer>
 </div>
-<app-footer></app-footer>
+
+<app-mobile-nav></app-mobile-nav>

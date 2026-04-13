@@ -8,7 +8,7 @@ import { AuthService } from '../../../core/services/auth.service';
 import { FormsModule } from '@angular/forms';
 import { CommentService } from '../../../core/services/comment.service';
 import { MatIconModule } from '@angular/material/icon';
-import { ChangeDetectorRef } from '@angular/core';
+
 @Component({
   selector: 'app-task-details',
   standalone: true,
@@ -22,10 +22,10 @@ export class TaskDetailsComponent implements OnInit {
   currentUser: any;
   taskId!: string;
 
-  newComment: string = '';
+  newComment = '';
   comments: any[] = [];
   editingCommentId: string | null = null;
-  editText: string = '';
+  editText = '';
 
   constructor(
     private route: ActivatedRoute,
@@ -33,17 +33,15 @@ export class TaskDetailsComponent implements OnInit {
     public authService: AuthService,
     private router: Router,
     private commentService: CommentService,
-    private cd: ChangeDetectorRef,
   ) {}
 
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
-
     if (!id) return;
 
     this.taskId = id;
+    this.currentUser = this.authService.user;
 
-    // تحميل التاسك
     this.tasksService.getById(id).subscribe({
       next: (task) => {
         this.task = task;
@@ -53,50 +51,28 @@ export class TaskDetailsComponent implements OnInit {
         this.loading = false;
       },
     });
-    this.currentUser = this.authService.user;
-    // تحميل الكومنتات
+
     this.loadComments();
   }
 
-  // ================= COMMENTS =================
-  getUser(): { id: string; name: string } | null {
-    const user = localStorage.getItem('user');
-    if (!user) return null;
+  /* ================= COMMENTS ================= */
 
-    try {
-      return JSON.parse(user);
-    } catch {
-      return null;
-    }
-  }
   loadComments() {
     this.commentService.getComments(this.taskId).subscribe({
       next: (res: any) => {
-        this.comments = res;
+        this.comments = res.map((c: any) => ({
+          ...c,
+          author: c.author || c.addedBy || c.user,
+        }));
       },
-      error: (err) => {
-        console.error('Error loading comments', err);
-      },
+      error: (err) => console.error('Load comments error:', err),
     });
   }
-
-  editComment(comment: any) {
-    this.editingCommentId = comment._id;
-    this.editText = comment.text;
-  }
-  isOwner(comment: any): boolean {
-    const userId = this.authService.user?.id;
-    const authorId = comment.author?._id || comment.author;
-
-    return String(authorId) === String(userId);
-  }
-
-  trackById(index: number, item: any) {
-    return item._id;
-  }
-
   addComment() {
-    if (!this.newComment?.trim()) return;
+    if (!this.newComment.trim()) return;
+
+    const currentUser = this.authService.user;
+    if (!currentUser) return;
 
     this.commentService
       .addComment(this.taskId, { text: this.newComment })
@@ -104,49 +80,84 @@ export class TaskDetailsComponent implements OnInit {
         next: (res: any) => {
           const newComment = {
             ...res,
-            author:
-              typeof res.author === 'object'
-                ? res.author
-                : {
-                    _id: this.authService.user?.id,
-                    name: this.authService.user?.name,
-                  },
+            author: {
+              _id: currentUser.id,
+              name: currentUser.name,
+              role: currentUser.role,
+              image: currentUser.image,
+            },
           };
 
-          this.comments = [...this.comments, newComment];
+          this.comments = [newComment, ...this.comments];
           this.newComment = '';
         },
       });
   }
-
-  deleteComment(id: string) {
-    this.commentService.deleteComment(id).subscribe(() => {
-      this.comments = this.comments.filter((c) => c._id !== id);
-    });
+  editComment(comment: any) {
+    this.editingCommentId = comment._id;
+    this.editText = comment.text;
   }
 
   updateComment(id: string) {
     if (!this.editText.trim()) return;
 
-    this.commentService
-      .updateComment(id, {
-        text: this.editText,
-      })
-      .subscribe({
-        next: (updated: any) => {
-          const index = this.comments.findIndex((c) => c._id === id);
+    this.commentService.updateComment(id, { text: this.editText }).subscribe({
+      next: (updated: any) => {
+        const index = this.comments.findIndex((c) => c._id === id);
 
-          if (index !== -1) {
-            this.comments[index] = updated;
-          }
+        if (index !== -1) {
+          this.comments[index] = {
+            ...this.comments[index],
+            ...updated,
+            author:
+              updated.author || updated.addedBy || this.comments[index].author,
+          };
+        }
 
-          this.editingCommentId = null;
-          this.editText = '';
-        },
-      });
+        this.comments = [...this.comments];
+        this.editingCommentId = null;
+        this.editText = '';
+      },
+      error: (err) => console.error('Update comment error:', err),
+    });
   }
 
-  // ================= TASK ACTIONS =================
+  deleteComment(id: string) {
+    this.commentService.deleteComment(id).subscribe({
+      next: () => {
+        this.comments = this.comments.filter((c) => c._id !== id);
+      },
+      error: (err) => console.error('Delete comment error:', err),
+    });
+  }
+
+  isOwner(comment: any): boolean {
+    const userId = this.authService.user?.id;
+
+    const authorId =
+      comment.author?._id ||
+      comment.addedBy?._id ||
+      comment.author ||
+      comment.addedBy;
+
+    return String(authorId) === String(userId);
+  }
+
+  trackById(index: number, item: any) {
+    return item._id + '_' + (item.author?.image || '');
+  }
+
+  getCommentImage(comment: any): string | null {
+    const img = comment.author?.image || comment.addedBy?.image || null;
+
+    if (!img) return null;
+
+    if (img.startsWith('http')) return img;
+
+    return `http://localhost:5000${img}`;
+  }
+
+  /* ================= TASK ACTIONS ================= */
 
   goBack() {
     this.router.navigate(['/dashboard/tasks']);
@@ -171,12 +182,8 @@ export class TaskDetailsComponent implements OnInit {
     if (!result.isConfirmed) return;
 
     this.tasksService.delete(this.task._id).subscribe({
-      next: () => {
-        this.router.navigate(['/dashboard/tasks']);
-      },
-      error: () => {
-        console.error('Delete failed');
-      },
+      next: () => this.router.navigate(['/dashboard/tasks']),
+      error: () => console.error('Delete failed'),
     });
   }
 }

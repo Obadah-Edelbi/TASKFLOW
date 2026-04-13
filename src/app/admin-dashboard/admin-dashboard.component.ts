@@ -5,6 +5,7 @@ import Swal from 'sweetalert2';
 import { TasksService } from '../core/services/tasks.service';
 import { MatSelectModule } from '@angular/material/select';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { Router } from '@angular/router';
 @Component({
   selector: 'app-admin-dashboard',
   standalone: true,
@@ -14,6 +15,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 })
 export class AdminDashboardComponent implements OnInit {
   tasks: any[] = [];
+  allTasks: any[] = [];
   loading = false;
 
   stats: any = {
@@ -24,7 +26,10 @@ export class AdminDashboardComponent implements OnInit {
     rejected: 0,
   };
 
-  constructor(private tasksService: TasksService) {}
+  constructor(
+    private tasksService: TasksService,
+    private router: Router,
+  ) {}
 
   ngOnInit(): void {
     this.loadTasks();
@@ -39,9 +44,9 @@ export class AdminDashboardComponent implements OnInit {
     this.tasksService.getAllAdmin().subscribe({
       next: (res: any) => {
         this.tasks = res.tasks || [];
+        this.allTasks = [...this.tasks];
         this.loading = false;
       },
-
       error: (err: any) => {
         console.error(err);
         this.loading = false;
@@ -50,15 +55,39 @@ export class AdminDashboardComponent implements OnInit {
   }
 
   // ================= LOAD STATS =================
-
   loadStats() {
     this.tasksService.getAdminStats().subscribe({
       next: (res: any) => {
         this.stats = res;
       },
-
       error: (err: any) => console.error(err),
     });
+  }
+  formatDate(value?: string): string {
+    if (!value) return '-';
+
+    const date = new Date(value);
+
+    return isNaN(date.getTime())
+      ? '-'
+      : date.toLocaleDateString('en-US', {
+          day: '2-digit',
+          month: 'short',
+          year: 'numeric',
+        });
+  }
+
+  formatTime(value?: string): string {
+    if (!value) return '';
+
+    const date = new Date(value);
+
+    return isNaN(date.getTime())
+      ? ''
+      : date.toLocaleTimeString([], {
+          hour: '2-digit',
+          minute: '2-digit',
+        });
   }
 
   // ================= CHANGE STATUS =================
@@ -98,7 +127,7 @@ export class AdminDashboardComponent implements OnInit {
 
       this.tasksService.deleteAsAdmin(task._id).subscribe({
         next: () => {
-          this.tasks = this.tasks.filter((t) => t._id !== task._id);
+          this.tasks = this.allTasks.filter((t) => t._id !== task._id);
           this.loadStats();
 
           Swal.fire({
@@ -125,17 +154,20 @@ export class AdminDashboardComponent implements OnInit {
   applyFilter(value: string) {
     const filterValue = value.trim().toLowerCase();
 
-    // ✅ if empty → restore all data
     if (!filterValue) {
-      this.tasks = [...this.tasks];
+      this.tasks = [...this.allTasks];
       return;
     }
 
-    // ✅ filter normally
-    this.tasks = this.tasks.filter(
+    this.tasks = this.allTasks.filter(
       (t) =>
         (t.title || '').toLowerCase().includes(filterValue) ||
         (t.description || '').toLowerCase().includes(filterValue),
     );
+  }
+
+  openDetails(task: any): void {
+    console.log('OPEN', task._id);
+    this.router.navigate(['/dashboard/tasks', task._id]);
   }
 }

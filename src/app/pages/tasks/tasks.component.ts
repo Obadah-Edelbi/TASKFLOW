@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { Task } from '../../core/models/task.model';
+
 import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSortModule } from '@angular/material/sort';
@@ -20,6 +21,18 @@ import { TasksService } from '../../core/services/tasks.service';
 import { NotificationService } from '../../core/services/notification.service';
 import { CreateTaskDialogComponent } from './create-task-dialog/create-task-dialog.component';
 import { EditTaskDialogComponent } from './edit-task-dialog/edit-task-dialog.component';
+
+type TaskStatus = 'new' | 'in_progress' | 'resolved' | 'rejected';
+
+interface TasksResponse {
+  tasks?: Task[];
+}
+
+interface NotificationPayload {
+  type: 'TASK_UPDATED' | 'NEW_MESSAGE';
+  taskId?: string;
+  status?: TaskStatus;
+}
 
 @Component({
   selector: 'app-tasks',
@@ -48,7 +61,7 @@ export class TasksComponent implements OnInit {
   pagedTasks: Task[] = [];
 
   searchTerm = '';
-  filterStatus: 'all' | 'new' | 'in_progress' | 'resolved' | 'rejected' = 'all';
+  filterStatus: 'all' | TaskStatus = 'all';
 
   pageIndex = 0;
   pageSize = 6;
@@ -61,60 +74,43 @@ export class TasksComponent implements OnInit {
     private dialog: MatDialog,
   ) {}
 
-  // ================= INIT =================
+  /* ================= INIT ================= */
   ngOnInit(): void {
     this.load();
+    this.listenToNotifications();
+  }
 
-    // 🔥 REALTIME FIX (بدون reload)
-    this.notificationService.onNotification((data: any) => {
-      if (data.type === 'TASK_UPDATED') {
-        this.updateTaskStatus(
-          data.taskId,
-          data.status as 'new' | 'in_progress' | 'resolved' | 'rejected',
-        );
-      }
-    });
-
-    this.notificationService.onNotification((data: any) => {
-      console.log('🔥 GOT NOTIFICATION:', data);
-
-      // 🔥 TASK UPDATE
-      if (data.type === 'TASK_UPDATED') {
-        this.updateTaskStatus(
-          data.taskId,
-          data.status as 'new' | 'in_progress' | 'resolved' | 'rejected',
-        );
+  private listenToNotifications(): void {
+    this.notificationService.onNotification((data: NotificationPayload) => {
+      if (data.type === 'TASK_UPDATED' && data.taskId && data.status) {
+        this.updateTaskStatus(data.taskId, data.status);
       }
 
-      // 💬 NEW MESSAGE
       if (data.type === 'NEW_MESSAGE') {
         console.log('💬 New message:', data);
       }
     });
   }
 
-  // ================= LOAD =================
+  /* ================= LOAD ================= */
   load(): void {
     this.loading = true;
 
     this.tasksService.getAll().subscribe({
-      next: (res: any) => {
-        this.tasks = Array.isArray(res) ? res : res.tasks || [];
+      next: (res: Task[] | TasksResponse) => {
+        this.tasks = Array.isArray(res) ? res : (res.tasks ?? []);
+        this.tasksService.setTasks(this.tasks);
         this.applyFilters();
         this.loading = false;
       },
-      error: (err: any) => {
+      error: (err: unknown) => {
         console.error(err);
         this.loading = false;
       },
     });
   }
 
-  trackByTask(index: number, task: any) {
-    return task._id;
-  }
-
-  // ================= CREATE =================
+  /* ================= CREATE ================= */
   createTask(): void {
     const dialogRef = this.dialog.open(CreateTaskDialogComponent, {
       width: '600px',
@@ -136,8 +132,8 @@ export class TasksComponent implements OnInit {
     });
   }
 
-  // ================= DELETE =================
-  deleteTask(task: any) {
+  /* ================= DELETE ================= */
+  deleteTask(task: Task): void {
     Swal.fire({
       title: 'Delete task?',
       text: 'This action cannot be undone.',
@@ -147,6 +143,8 @@ export class TasksComponent implements OnInit {
       cancelButtonColor: '#6b7280',
       confirmButtonText: 'Delete',
       cancelButtonText: 'Cancel',
+      background: this.isDarkMode ? '#1f2937' : '#fff',
+      color: this.isDarkMode ? '#f9fafb' : '#000',
     }).then((result) => {
       if (!result.isConfirmed) return;
 
@@ -184,42 +182,49 @@ export class TasksComponent implements OnInit {
     });
   }
 
-  // ================= FILTERS =================
-  onSearch(value: string) {
+  get isDarkMode(): boolean {
+    return localStorage.getItem('theme') === 'dark';
+  }
+
+  /* ================= FILTERS ================= */
+  onSearch(value: string): void {
     this.searchTerm = value;
     this.applyFilters();
   }
 
-  onStatusChange(value: typeof this.filterStatus) {
+  onStatusChange(value: 'all' | TaskStatus): void {
     this.filterStatus = value;
     this.applyFilters();
   }
 
-  clearFilters() {
+  clearFilters(): void {
     this.searchTerm = '';
     this.filterStatus = 'all';
     this.applyFilters();
   }
 
-  applyFilters() {
-    const s = this.searchTerm.trim().toLowerCase();
-    const st = this.filterStatus;
+  applyFilters(): void {
+    const search = this.searchTerm.trim().toLowerCase();
+    const status = this.filterStatus;
 
-    this.filteredTasks = this.tasks.filter((t: Task) => {
-      const title = t.title?.toLowerCase() ?? '';
-      const desc = t.description?.toLowerCase() ?? '';
+    this.filteredTasks = this.tasks.filter((task) => {
+      const title = task.title?.toLowerCase() ?? '';
+      const description = task.description?.toLowerCase() ?? '';
 
-      return (
-        (!s || title.includes(s) || desc.includes(s)) &&
-        (st === 'all' || (t.status ?? 'new') === st)
-      );
+      const matchesSearch =
+        !search || title.includes(search) || description.includes(search);
+
+      const matchesStatus =
+        status === 'all' || (task.status ?? 'new') === status;
+
+      return matchesSearch && matchesStatus;
     });
 
     this.pageIndex = 0;
     this.applyPaging();
   }
 
-  // ================= PAGINATION =================
+  /* ================= PAGINATION ================= */
   get totalPages(): number {
     return Math.max(1, Math.ceil(this.filteredTasks.length / this.pageSize));
   }
@@ -228,57 +233,64 @@ export class TasksComponent implements OnInit {
     return Array.from({ length: this.totalPages }, (_, i) => i);
   }
 
-  goToPage(i: number) {
-    this.pageIndex = i;
+  goToPage(index: number): void {
+    this.pageIndex = index;
     this.applyPaging();
   }
 
-  prevPage() {
+  prevPage(): void {
     if (this.pageIndex === 0) return;
     this.pageIndex--;
     this.applyPaging();
   }
 
-  nextPage() {
+  nextPage(): void {
     if (this.pageIndex >= this.totalPages - 1) return;
     this.pageIndex++;
     this.applyPaging();
   }
 
-  private applyPaging() {
+  private applyPaging(): void {
     const start = this.pageIndex * this.pageSize;
     this.pagedTasks = this.filteredTasks.slice(start, start + this.pageSize);
   }
 
-  // ================= REALTIME UPDATE =================
-  updateTaskStatus(taskId: string, status: any) {
+  /* ================= REALTIME ================= */
+  updateTaskStatus(taskId: string, status: TaskStatus): void {
     const task = this.tasks.find((t) => t._id === taskId);
 
-    if (task) {
-      task.status = status;
-      this.applyFilters();
-    }
+    if (!task) return;
+
+    task.status = status;
+    this.applyFilters();
   }
 
-  // ================= HELPERS =================
+  /* ================= HELPERS ================= */
   statusLabel(status?: string): string {
     return (status ?? 'new').replace('_', ' ').toUpperCase();
   }
 
-  formatDate(d?: string): string {
-    if (!d) return '-';
-    const date = new Date(d);
+  formatDate(value?: string): string {
+    if (!value) return '-';
+
+    const date = new Date(value);
     return isNaN(date.getTime()) ? '-' : date.toLocaleDateString();
   }
 
-  formatTime(d?: string): string {
-    if (!d) return '';
-    const date = new Date(d);
+  formatTime(value?: string): string {
+    if (!value) return '';
+
+    const date = new Date(value);
+
     return isNaN(date.getTime())
       ? ''
-      : date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      : date.toLocaleTimeString([], {
+          hour: '2-digit',
+          minute: '2-digit',
+        });
   }
 
+  /* ================= EDIT ================= */
   openEditDialog(task: Task): void {
     this.dialog
       .open(EditTaskDialogComponent, {
@@ -304,24 +316,28 @@ export class TasksComponent implements OnInit {
       });
   }
 
-  // ================= STATS =================
+  openDetails(task: Task): void {
+    this.router.navigate(['/dashboard/tasks', task._id]);
+  }
 
+  trackById(index: number, task: Task): string {
+    return task._id;
+  }
+
+  /* ================= STATS ================= */
   get totalTasks(): number {
     return this.tasks.length;
   }
 
   get inProgressCount(): number {
-    return this.tasks.filter((t) => t.status === 'in_progress').length;
+    return this.tasks.filter((task) => task.status === 'in_progress').length;
   }
 
   get completedCount(): number {
-    return this.tasks.filter((t) => t.status === 'resolved').length;
+    return this.tasks.filter((task) => task.status === 'resolved').length;
   }
 
   get highPriorityCount(): number {
-    return this.tasks.filter((t) => t.priority === 'high').length;
-  }
-  openDetails(task: any) {
-    this.router.navigate(['/dashboard/tasks', task._id]);
+    return this.tasks.filter((task) => task.priority === 'high').length;
   }
 }

@@ -1,4 +1,4 @@
-<div class="wrap">
+<div class="wrap app-container">
   <!-- ================= HERO ================= -->
   <div class="hero">
     <div class="hero-left">
@@ -101,7 +101,7 @@
       </div>
 
       <!-- ROWS -->
-      <div class="trow" *ngFor="let t of tasks">
+      <div class="trow" *ngFor="let t of tasks" (click)="openDetails(t)">
         <!-- TITLE -->
         <div class="td title">
           <div class="t1">{{ t.title }}</div>
@@ -113,6 +113,7 @@
           <mat-form-field appearance="outline" class="status-select">
             <mat-select
               [value]="t.status"
+              (click)="$event.stopPropagation()"
               (selectionChange)="changeStatus(t, $event.value)"
             >
               <mat-option value="new">New</mat-option>
@@ -132,13 +133,17 @@
         </div>
 
         <!-- CREATED -->
-        <div class="td">
-          {{ t.createdAt | date: "short" }}
+        <div class="td dt">
+          <span>{{ formatDate(t.createdAt) }}</span>
+          <small>{{ formatTime(t.createdAt) }}</small>
         </div>
 
         <!-- ACTIONS -->
         <div class="td center">
-          <button mat-icon-button (click)="deleteTask(t)">
+          <button
+            mat-icon-button
+            (click)="deleteTask(t); $event.stopPropagation()"
+          >
             <mat-icon>delete</mat-icon>
           </button>
         </div>

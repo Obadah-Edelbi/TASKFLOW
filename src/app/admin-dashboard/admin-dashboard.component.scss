@@ -1,8 +1,8 @@
 /* ========================================== LAYOUT ========================================== */
 .wrap {
-  max-width: 1400px;
-  margin: 0 auto;
-  padding: 24px;
+  width: 100%;
+  padding: 0;
+  margin: 0;
 }
 
 /* ========================================== HERO ========================================== */
@@ -37,7 +37,7 @@
 }
 
 .stat {
-  background: var(--card);
+  background: rgba(255, 255, 255, 0.03);
   border: 1px solid var(--border);
   border-radius: 20px;
   padding: 26px;
@@ -104,7 +104,7 @@
 .card {
   border-radius: 18px;
   border: 1px solid var(--border);
-  background: var(--card);
+  background: rgba(255, 255, 255, 0.03);
   overflow: hidden;
 }
 
@@ -324,10 +324,58 @@ button[mat-icon-button]:hover mat-icon {
   padding: 0 12px 0 36px;
   border-radius: 10px;
   border: 1px solid var(--border);
-  background: var(--card);
+  background: rgba(255, 255, 255, 0.03);
   outline: none;
+  color: var(--text);
 }
-.table {
-  max-height: 60vh; /* responsive height */
-  overflow-y: auto;
+// .table {
+//   max-height: 60vh; /* responsive height */
+//   overflow-y: auto;
+// }
+.page,
+.container {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+/* Remove border + center text */
+mat-form-field {
+  width: 140px;
+}
+
+::ng-deep .mat-mdc-text-field-wrapper {
+  border: none !important;
+  box-shadow: none !important;
+  background: transparent !important;
+  padding: 0 !important;
+}
+
+::ng-deep .mdc-notched-outline,
+::ng-deep .mdc-notched-outline * {
+  border: none !important;
+}
+
+::ng-deep .mat-mdc-select-value {
+  text-align: center !important;
+  width: 100%;
+}
+
+::ng-deep .mat-mdc-select-trigger {
+  justify-content: center !important;
+}
+
+::ng-deep .mat-mdc-form-field-infix {
+  text-align: center;
+  min-height: auto !important;
+}
+.dt {
+  display: flex;
+  flex-direction: column;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.dt small {
+  color: var(--text-muted);
+  margin-top: 2px;
 }

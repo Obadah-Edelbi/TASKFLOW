@@ -45,6 +45,10 @@ const userSchema = new mongoose.Schema(
       type: String,
       default: "",
     },
+    bio: {
+      type: String,
+      maxlength: 100,
+    },
   },
 
   // إضافة تاريخ الإنشاء والتحديث تلقائياً

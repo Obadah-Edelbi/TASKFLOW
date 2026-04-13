@@ -9,6 +9,7 @@ import { HttpClient } from '@angular/common/http';
 import { AuthService } from '../../core/services/auth.service';
 import { ToastrService } from 'ngx-toastr';
 import { NotificationService } from '../../core/services/notification.service';
+import { UserService } from '../../core/services/user.service';
 
 @Component({
   selector: 'app-navbar',
@@ -30,6 +31,7 @@ export class NavbarComponent implements OnInit {
     private toastr: ToastrService,
     private http: HttpClient,
     private notificationService: NotificationService,
+    private userService: UserService,
   ) {}
 
   notifications: any[] = [];
@@ -40,12 +42,20 @@ export class NavbarComponent implements OnInit {
   activeTab = 'Tasks';
   visibleNavLinks: any[] = [];
   isDarkMode = false;
+  user: any;
 
-  // ================= INIT =================
   ngOnInit() {
     this.buildNavLinks();
 
-    // ✅ LOAD THEME FROM LOCAL STORAGE
+    this.userService.user$.subscribe((user) => {
+      this.user = user;
+    });
+
+    this.userService.getMe().subscribe((res: any) => {
+      this.userService.setUser(res);
+    });
+
+    // theme
     const savedTheme = localStorage.getItem('theme');
 
     if (savedTheme === 'dark') {
@@ -56,7 +66,19 @@ export class NavbarComponent implements OnInit {
       document.body.classList.remove('dark');
     }
 
-    // 🔥 REALTIME notifications (your existing code)
+    // load notifications first
+    this.http
+      .get<any>('http://localhost:5000/api/notifications')
+      .subscribe((res: any) => {
+        this.notifications = (res.notifications || res || []).map((n: any) => ({
+          ...n,
+          createdAt: n.createdAt ? new Date(n.createdAt) : new Date(),
+        }));
+
+        this.unreadCount = this.notifications.filter((n) => !n.read).length;
+      });
+
+    // realtime notifications
     this.notificationService.onNotification((notif: any) => {
       const exists = this.notifications.some((n) => n._id === notif._id);
       if (exists) return;
@@ -71,8 +93,11 @@ export class NavbarComponent implements OnInit {
       this.unreadCount++;
 
       this.toastr.info(notif.message);
+      this.playSound();
+      this.triggerBell();
     });
   }
+
   @HostListener('document:click', ['$event'])
   handleClickOutside(event: Event) {
     const target = event.target as HTMLElement;
@@ -86,18 +111,17 @@ export class NavbarComponent implements OnInit {
     }
   }
 
-  // ================= DROPDOWN =================
   toggleDropdown(event: MouseEvent) {
-    event.stopPropagation(); // 🔥 FIX
+    event.stopPropagation();
     this.showDropdown = !this.showDropdown;
 
     if (this.showDropdown) {
       this.markAllAsRead();
     }
 
-    this.showUserMenu = false; // optional (close user menu)
+    this.showUserMenu = false;
   }
-  // ================= READ =================
+
   markAllAsRead() {
     this.notifications.forEach((n) => {
       if (!n.read) {
@@ -105,6 +129,7 @@ export class NavbarComponent implements OnInit {
           .put(`http://localhost:5000/api/notifications/${n._id}/read`, {})
           .subscribe();
       }
+
       n.read = true;
     });
 
@@ -129,7 +154,6 @@ export class NavbarComponent implements OnInit {
     this.unreadCount = 0;
   }
 
-  // ================= UX =================
   playSound() {
     const audio = new Audio('assets/notification-sound/notification.mp3');
     audio.play().catch(() => {});
@@ -159,7 +183,6 @@ export class NavbarComponent implements OnInit {
     return Math.floor(seconds / 86400) + ' day ago';
   }
 
-  // ================= NAV =================
   buildNavLinks() {
     this.visibleNavLinks = [
       { name: 'Tasks', icon: 'assignment', route: '/dashboard/tasks' },
@@ -186,7 +209,7 @@ export class NavbarComponent implements OnInit {
   toggleUserMenu(event: Event) {
     event.stopPropagation();
     this.showUserMenu = !this.showUserMenu;
-    this.showDropdown = false; // close notif
+    this.showDropdown = false;
   }
 
   logout() {
@@ -209,7 +232,7 @@ export class NavbarComponent implements OnInit {
   }
 
   get username(): string {
-    return this.authService.user?.name ?? '';
+    return this.user?.name ?? '';
   }
 
   get isLoggedIn(): boolean {

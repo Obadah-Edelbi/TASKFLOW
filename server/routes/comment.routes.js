@@ -51,7 +51,12 @@ router.post("/:taskId", authGuard, async (req, res) => {
       console.error("Notification error:", err.message);
     }
 
-    res.json(newComment);
+    const populatedComment = await newComment.populate(
+      "author",
+      "name email role",
+    );
+
+    res.json(populatedComment);
   } catch (error) {
     console.error("Add comment error:", error);
     res.status(500).json({ error: error.message });
@@ -68,7 +73,7 @@ router.get("/:taskId", authGuard, async (req, res) => {
     const comments = await Comment.find({
       task: req.params.taskId,
     })
-      .populate("author", "name email")
+      .populate("author", "name email role image")
       .sort({ createdAt: -1 });
 
     res.json(comments);

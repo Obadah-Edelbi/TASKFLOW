@@ -1,9 +1,5 @@
-.main-layout {
-  padding: 40px;
-}
-
-@media (max-width: 768px) {
-  .main-layout {
-    padding: 16px;
-  }
+:host {
+  display: block;
+  margin: 0;
+  padding: 0;
 }

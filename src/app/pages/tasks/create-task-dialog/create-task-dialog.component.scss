@@ -7,4 +7,34 @@
   flex-direction: column;
   gap: 18px;
   padding-top: 10px;
+  min-width: 500px;
+}
+
+mat-form-field {
+  width: 100%;
+}
+
+textarea {
+  resize: vertical;
+}
+
+mat-dialog-actions {
+  padding-top: 10px;
+}
+
+::ng-deep .modern-dialog .mdc-notched-outline__notch {
+  border-left: none !important;
+}
+/* Placeholder theme support */
+
+/* Dark mode */
+:host-context(body.dark) input::placeholder,
+:host-context(body.dark) textarea::placeholder {
+  color: rgba(255, 255, 255, 0.55) !important;
+}
+
+/* Light mode */
+:host-context(body:not(.dark)) input::placeholder,
+:host-context(body:not(.dark)) textarea::placeholder {
+  color: rgba(0, 0, 0, 0.45) !important;
 }

@@ -24,7 +24,7 @@ router.get("/admin/all", authGuard, requireRole("admin"), async (req, res) => {
   try {
     const tasks = await Task.find()
       .sort({ createdAt: -1 })
-      .populate("user", "name email")
+      .populate("user", "name email role image")
       .populate("assignedTo", "name email role");
 
     res.json({ count: tasks.length, tasks });
@@ -213,7 +213,9 @@ router.get("/:id", authGuard, async (req, res) => {
     const task = await Task.findOne({
       _id: req.params.id,
       user: req.user.id,
-    }).populate("comments.addedBy", "name email role");
+    })
+      .populate("user", "name email role image")
+      .populate("comments.addedBy", "name email role");
 
     if (!task) return res.status(404).json({ message: "Task not found" });
 

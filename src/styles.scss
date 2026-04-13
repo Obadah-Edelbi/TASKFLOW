@@ -4,22 +4,18 @@
    VARIABLES
 ========================= */
 :root {
+  --app-width: 1280px;
+  --app-padding: 24px;
+  --radius: 18px;
+
   --success: #10b981;
   --warning: #f59e0b;
   --danger: #ef4444;
   --info: #6366f1;
 
-  /* LIGHT */
-  --bg: #e9edf3;
-  --bg-gradient: linear-gradient(135deg, #e9edf3, #dde3ec);
-  --card: #f5f7fb;
-  --border: #cfd6e1;
+  --bg: #f8fafc;
+  --bg-gradient: linear-gradient(180deg, #f8fafc 0%, #eef2f7 100%);
 
-  --text: #1e293b;
-  --text-muted: #64748b;
-
-  --accent: #e46b1b;
-  --button-text: #ffffff;
   --card: #ffffff;
   --card-hover: #f3f4f6;
   --border: #e5e7eb;
@@ -28,32 +24,131 @@
   --text-muted: #6b7280;
 
   --accent: #f97316;
+  --button-text: #ffffff;
+
   --shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
 }
 
 /* DARK */
 body.dark {
   --bg: #0b1220;
-  --bg-gradient: linear-gradient(135deg, #0b1220, #16213a);
-  --card: #1e293b;
-  --border: #334155;
-
-  --text: #f1f5f9;
-  --text-muted: #94a3b8;
+  --bg-gradient: linear-gradient(180deg, #0b1220 0%, #0f172a 100%);
   --card: #1e293b;
   --card-hover: #334155;
   --border: rgba(255, 255, 255, 0.08);
-
+  --text: #f1f5f9;
+  --text-muted: #94a3b8;
   --accent: #f97316;
 }
 
 /* =========================
    BASE
 ========================= */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body,
+app-root {
+  margin: 0 !important;
+  padding: 0 !important;
+  min-height: 100%;
+}
+
 body {
-  background: var(--bg-gradient);
-  color: var(--text);
+  position: relative;
+  overflow-x: hidden;
   font-family: "Inter", sans-serif;
+  line-height: 1.5;
+  color: var(--text);
+  background:
+    radial-gradient(
+      circle at 20% 20%,
+      rgba(255, 120, 0, 0.12),
+      transparent 40%
+    ),
+    radial-gradient(
+      circle at 80% 30%,
+      rgba(59, 130, 246, 0.12),
+      transparent 40%
+    ),
+    radial-gradient(
+      circle at 50% 80%,
+      rgba(34, 197, 94, 0.08),
+      transparent 40%
+    ),
+    linear-gradient(180deg, #0b1220 0%, #0f172a 100%);
+  background-attachment: fixed;
+}
+
+body:not(.dark) {
+  background:
+    radial-gradient(
+      circle at 15% 20%,
+      rgba(255, 120, 0, 0.08),
+      transparent 40%
+    ),
+    radial-gradient(
+      circle at 85% 25%,
+      rgba(59, 130, 246, 0.08),
+      transparent 40%
+    ),
+    radial-gradient(
+      circle at 50% 90%,
+      rgba(34, 197, 94, 0.06),
+      transparent 50%
+    ),
+    linear-gradient(180deg, #f8fafc 0%, #eef2f7 100%);
+  background-attachment: fixed;
+}
+
+app-root {
+  display: block;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* =========================
+   TYPOGRAPHY
+========================= */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  margin: 0;
+  line-height: 1.2;
+  color: var(--text);
+}
+
+p {
+  margin: 0;
+  color: var(--text-muted);
+}
+
+/* =========================
+   SAFE GLOBAL FORM STYLES
+========================= */
+input:not(.mat-mdc-input-element),
+textarea:not(.mat-mdc-input-element),
+select {
+  font: inherit;
+}
+
+input:not(.mat-mdc-input-element),
+textarea:not(.mat-mdc-input-element) {
+  border-radius: 12px;
 }
 
 /* =========================
@@ -90,8 +185,40 @@ body {
   color: var(--text) !important;
 }
 
+button,
+a,
+.card,
+.stat,
+.stat-card,
+.nav-btn,
+.user,
+.icon-btn,
+.badge,
+input,
+textarea,
+select {
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease,
+    border-color 0.2s ease,
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+button:active {
+  transform: scale(0.98);
+}
+
 /* =========================
-   DIALOG (FIX)
+   DIALOG
 ========================= */
 .cdk-overlay-pane.modern-dialog .mdc-dialog__surface {
   background: var(--card) !important;
@@ -109,10 +236,8 @@ body {
 }
 
 /* =========================
-   SELECT (THEME FIX)
+   SELECT
 ========================= */
-
-/* panel */
 body:not(.dark) .mat-mdc-select-panel {
   background: #ffffff !important;
   color: #1e293b !important;
@@ -123,7 +248,6 @@ body.dark .mat-mdc-select-panel {
   color: var(--text) !important;
 }
 
-/* options */
 body:not(.dark) .mat-mdc-option {
   color: #1e293b !important;
 }
@@ -132,7 +256,6 @@ body.dark .mat-mdc-option {
   color: var(--text) !important;
 }
 
-/* hover */
 body:not(.dark) .mat-mdc-option:hover {
   background: rgba(0, 0, 0, 0.05);
 }
@@ -141,209 +264,146 @@ body.dark .mat-mdc-option:hover {
   background: rgba(255, 255, 255, 0.08);
 }
 
-/* selected */
 .mat-mdc-option.mdc-list-item--selected {
   color: var(--accent) !important;
 }
-/* ===== SELECT TEXT + ARROW FIX ===== */
 
-/* النص المختار */
-.mat-mdc-select-value {
-  color: var(--text) !important;
-}
-
-/* السهم */
-.mat-mdc-select-arrow svg {
-  fill: var(--text) !important;
-}
-
-/* إذا في icon بدل svg */
+.mat-mdc-select-value,
 .mat-mdc-select-arrow {
   color: var(--text) !important;
 }
 
-/* =========================
-   RESPONSIVE SYSTEM
-========================= */
-
-/* MOBILE */
-@media (max-width: 768px) {
-  .app-container {
-    padding: 16px !important;
-  }
-
-  /* cards */
-  .stats {
-    grid-template-columns: 1fr !important;
-  }
-
-  /* buttons */
-  .create-btn {
-    width: 100%;
-  }
-
-  /* tables */
-  .trow {
-    grid-template-columns: 1fr !important;
-  }
-
-  /* dialog */
-  .cdk-overlay-pane.modern-dialog {
-    width: 95vw !important;
-  }
+.mat-mdc-select-arrow svg {
+  fill: var(--text) !important;
 }
 
-/* TABLET */
+/* =========================
+   SWEETALERT DARK
+========================= */
+body.dark .swal2-popup {
+  background: #1f2937 !important;
+  color: #f9fafb !important;
+  border-radius: 16px;
+}
+
+body.dark .swal2-title {
+  color: #f9fafb !important;
+}
+
+body.dark .swal2-html-container {
+  color: #d1d5db !important;
+}
+
+/* =========================
+   LAYOUT
+========================= */
+.app-container {
+  width: 100%;
+  max-width: var(--app-width);
+  margin: 0 auto;
+  padding-left: var(--app-padding);
+  padding-right: var(--app-padding);
+}
+
+.page-shell {
+  width: 100%;
+  padding-top: 24px;
+  padding-bottom: 24px;
+}
+
+.section-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+
+.section-spacing {
+  margin-bottom: 24px;
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
 @media (max-width: 1024px) {
+  :root {
+    --app-padding: 20px;
+  }
+
   .stats {
     grid-template-columns: repeat(2, 1fr);
   }
 }
 
-/* SMALL MOBILE */
+@media (max-width: 768px) {
+  :root {
+    --app-padding: 16px;
+  }
+
+  .app-container {
+    padding: 16px !important;
+  }
+
+  .stats {
+    grid-template-columns: 1fr !important;
+  }
+
+  .create-btn {
+    width: 100%;
+  }
+
+  .cdk-overlay-pane.modern-dialog {
+    width: 95vw !important;
+  }
+
+  h1 {
+    font-size: 26px !important;
+  }
+
+  h2 {
+    font-size: 22px !important;
+  }
+}
+
 @media (max-width: 480px) {
+  :root {
+    --app-padding: 14px;
+  }
+
   html {
     font-size: 14px;
   }
 
-  .page-container {
-    padding: 16px;
+  button,
+  .create-btn {
+    min-height: 42px;
   }
 }
-/* ================= APP BACKGROUND ================= */
 
-body {
-  background:
-    radial-gradient(
-      circle at 20% 20%,
-      rgba(255, 120, 0, 0.12),
-      transparent 40%
-    ),
-    radial-gradient(
-      circle at 80% 30%,
-      rgba(59, 130, 246, 0.12),
-      transparent 40%
-    ),
-    radial-gradient(
-      circle at 50% 80%,
-      rgba(34, 197, 94, 0.08),
-      transparent 40%
-    ),
-    linear-gradient(180deg, #0b1220 0%, #0f172a 100%);
-
-  background-attachment: fixed;
-}
-body::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-
-  background: radial-gradient(
-    circle at 30% 40%,
-    rgba(255, 120, 0, 0.08),
-    transparent 50%
-  );
-
-  animation: floatBg 12s ease-in-out infinite alternate;
-  pointer-events: none;
+/* =========================
+   SCROLLBAR
+========================= */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
 }
 
-@keyframes floatBg {
-  from {
-    transform: translateY(0px);
+::-webkit-scrollbar-thumb {
+  background: rgba(120, 120, 120, 0.35);
+  border-radius: 999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(120, 120, 120, 0.55);
+}
+
+::selection {
+  background: rgba(249, 115, 22, 0.25);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation: none !important;
+    transition: none !important;
   }
-  to {
-    transform: translateY(40px);
-  }
-}
-/* ================= LIGHT MODE ================= */
-
-body.dark {
-  background:
-    radial-gradient(circle at 20% 20%, rgba(255, 120, 0, 0.1), transparent 40%),
-    radial-gradient(
-      circle at 80% 30%,
-      rgba(59, 130, 246, 0.1),
-      transparent 40%
-    ),
-    radial-gradient(
-      circle at 50% 80%,
-      rgba(34, 197, 94, 0.06),
-      transparent 40%
-    ),
-    linear-gradient(180deg, #0b1220, #0f172a);
-
-  background-attachment: fixed;
-}
-
-body.dark::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-
-  background: radial-gradient(
-    circle at 30% 40%,
-    rgba(255, 120, 0, 0.06),
-    transparent 50%
-  );
-  animation: floatBg 12s ease-in-out infinite alternate;
-  pointer-events: none;
-}
-
-body:not(.dark) {
-  background:
-    radial-gradient(
-      circle at 15% 20%,
-      rgba(255, 120, 0, 0.04),
-      transparent 35%
-    ),
-    radial-gradient(
-      circle at 85% 25%,
-      rgba(59, 130, 246, 0.04),
-      transparent 35%
-    ),
-    radial-gradient(
-      circle at 50% 80%,
-      rgba(34, 197, 94, 0.03),
-      transparent 40%
-    ),
-    linear-gradient(180deg, #f8fafc, #eef2f7);
-
-  background-attachment: fixed;
-}
-@keyframes floatLight {
-  from {
-    transform: translateY(0);
-  }
-  to {
-    transform: translateY(40px);
-  }
-}
-body:not(.dark) {
-  background:
-    radial-gradient(
-      circle at 15% 20%,
-      rgba(255, 120, 0, 0.08),
-      transparent 40%
-    ),
-    radial-gradient(
-      circle at 85% 25%,
-      rgba(59, 130, 246, 0.08),
-      transparent 40%
-    ),
-    radial-gradient(
-      circle at 50% 90%,
-      rgba(34, 197, 94, 0.06),
-      transparent 50%
-    ),
-    linear-gradient(180deg, #f8fafc 0%, #eef2f7 100%);
-
-  background-attachment: fixed;
-}
-
-.wrap {
-  background-color: transparent !important;
-}
-.card {
-  background: var(--card); /* خليه */
 }

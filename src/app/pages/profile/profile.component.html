@@ -20,7 +20,11 @@
         <div class="avatar-wrapper">
           <img
             *ngIf="user.image"
-            [src]="'http://localhost:5000' + user.image"
+            [src]="
+              user?.image?.startsWith('http')
+                ? user.image
+                : 'http://localhost:5000' + user.image
+            "
           />
           <div *ngIf="!user.image" class="avatar-placeholder">
             {{ user.name?.charAt(0) }}
@@ -33,6 +37,15 @@
         </div>
 
         <h2>{{ user.name }}</h2>
+        <p class="bio" *ngIf="user.bio; else noBio">
+          {{ user.bio }}
+        </p>
+
+        <ng-template #noBio>
+          <p class="bio empty">No bio yet...</p>
+        </ng-template>
+
+        <div class="divider"></div>
 
         <span class="role-badge" [class.admin]="user.role === 'admin'">
           <mat-icon>
@@ -49,16 +62,8 @@
           <div class="stat-card">
             <mat-icon>task_alt</mat-icon>
             <div>
-              <strong>12</strong>
-              <span>Tasks</span>
-            </div>
-          </div>
-
-          <div class="stat-card">
-            <mat-icon>folder</mat-icon>
-            <div>
-              <strong>8</strong>
-              <span>Projects</span>
+              <strong> {{ tasksCount }}</strong>
+              <span> Tasks</span>
             </div>
           </div>
         </div>
@@ -66,7 +71,7 @@
 
       <div class="profile-card">
         <h3>Contact Details</h3>
-
+        <div class="divider1"></div>
         <div class="info-item" (click)="copyEmail(user.email)">
           <mat-icon>mail_outline</mat-icon>
           <span>{{ user.email }}</span>
@@ -90,7 +95,11 @@
         <div class="form-grid">
           <div class="input-group">
             <label>Name</label>
-            <input [(ngModel)]="user.name" [disabled]="!editMode" />
+            <input
+              [(ngModel)]="user.name"
+              (ngModelChange)="userService.setUser(user)"
+              [disabled]="!editMode"
+            />
           </div>
 
           <div class="input-group">
@@ -110,7 +119,12 @@
 
           <div class="input-group full">
             <label>Bio</label>
-            <textarea [(ngModel)]="user.bio" [disabled]="!editMode"></textarea>
+            <textarea
+              [(ngModel)]="user.bio"
+              [disabled]="!editMode"
+              placeholder="Tell us about you!"
+              maxlength="500"
+            ></textarea>
           </div>
         </div>
 

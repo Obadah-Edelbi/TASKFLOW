@@ -1,9 +1,8 @@
 /* ========================================== LAYOUT ========================================== */
 .wrap {
   width: 100%;
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 40px;
+  margin: 0;
+  padding: 0;
 }
 
 /* ========================================== HERO ========================================== */
@@ -431,7 +430,7 @@ button[mat-icon-button]:hover mat-icon {
 /* 🔥 موبايل */
 @media (max-width: 768px) {
   .wrap {
-    padding: 16px;
+    padding: 0;
   }
 }
 
@@ -440,8 +439,7 @@ button[mat-icon-button]:hover mat-icon {
   border-radius: 20px;
 }
 @media (max-width: 768px) {
-  .topbar-container,
-  .wrap {
+  .topbar-container {
     padding-left: 12px;
     padding-right: 12px;
   }
@@ -697,4 +695,55 @@ body.dark .stat-text h2 {
     opacity: 1;
     transform: translateY(0);
   }
+}
+:host-context(body.dark) .stat-card,
+:host-context(body.dark) .card,
+:host-context(body.dark) .filters,
+:host-context(body.dark) .search input,
+:host-context(body.dark) .thead,
+:host-context(body.dark) .tfoot,
+:host-context(body.dark) .mat-mdc-text-field-wrapper {
+  background: rgba(255, 255, 255, 0.03) !important;
+}
+
+:host-context(body.dark) .trow:hover {
+  background: rgba(255, 255, 255, 0.025) !important;
+}
+
+:host-context(body:not(.dark)) .stat-card,
+:host-context(body:not(.dark)) .card,
+:host-context(body:not(.dark)) .filters,
+:host-context(body:not(.dark)) .search input,
+:host-context(body:not(.dark)) .thead,
+:host-context(body:not(.dark)) .tfoot,
+:host-context(body:not(.dark)) .mat-mdc-text-field-wrapper {
+  background: rgba(0, 0, 0, 0.02) !important;
+}
+
+/* ===== FINAL STAT CARD THEME ===== */
+
+/* Light mode */
+:host-context(body:not(.dark)) .stat-card {
+  background: rgba(0, 0, 0, 0.025) !important;
+  border: 1px solid rgba(0, 0, 0, 0.06) !important;
+}
+
+/* Light hover */
+:host-context(body:not(.dark)) .stat-card:hover {
+  box-shadow:
+    0 10px 24px rgba(0, 0, 0, 0.08),
+    0 4px 10px rgba(0, 0, 0, 0.05);
+}
+
+/* Dark mode */
+:host-context(body.dark) .stat-card {
+  background: rgba(255, 255, 255, 0.04) !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+}
+
+/* Dark hover */
+:host-context(body.dark) .stat-card:hover {
+  box-shadow:
+    0 10px 24px rgba(255, 255, 255, 0.06),
+    0 4px 10px rgba(255, 255, 255, 0.04);
 }

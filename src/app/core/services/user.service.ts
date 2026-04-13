@@ -19,6 +19,10 @@ export class UserService {
   // STATE MANAGEMENT 🔥
   // =============================
   setUser(user: any) {
+    if (user.image && !user.image.startsWith('http')) {
+      user.image = 'http://localhost:5000' + user.image;
+    }
+
     this.userSubject.next(user);
   }
 

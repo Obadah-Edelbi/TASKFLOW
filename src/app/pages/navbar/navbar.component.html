@@ -1,5 +1,5 @@
 <nav class="navbar" *ngIf="isLoggedIn">
-  <div class="navbar-container">
+  <div class="app-container navbar-container">
     <!-- LEFT -->
     <div class="left-section">
       <!-- LOGO -->
@@ -76,19 +76,42 @@
       <div class="divider"></div>
 
       <!-- 👤 USER -->
+      <!-- 👤 USER -->
       <div class="user" (click)="toggleUserMenu($event)">
+        <!-- AVATAR -->
         <div class="avatar">
-          {{ username?.charAt(0) }}
+          <img
+            *ngIf="user?.image && !imageError"
+            [src]="user.image"
+            (error)="imageError = true"
+          />
+
+          <span *ngIf="!user?.image || imageError">
+            {{ user?.name?.charAt(0) }}
+          </span>
         </div>
 
+        <!-- INFO -->
         <div class="user-info">
-          <span class="name">{{ username }}</span>
-          <span class="role">ADMIN</span>
+          <span class="name">{{ user?.name }}</span>
+
+          <div class="role-row">
+            <mat-icon class="role-icon" *ngIf="isAdmin">
+              admin_panel_settings
+            </mat-icon>
+
+            <mat-icon class="role-icon" *ngIf="!isAdmin"> person </mat-icon>
+
+            <span class="role-text">
+              {{ isAdmin ? "Admin" : "User" }}
+            </span>
+          </div>
         </div>
 
+        <!-- ARROW -->
         <mat-icon class="arrow">expand_more</mat-icon>
 
-        <!-- DROPDOWN -->
+        <!-- DROPDOWN (UNCHANGED) -->
         <div class="user-dropdown" *ngIf="showUserMenu">
           <button
             (click)="

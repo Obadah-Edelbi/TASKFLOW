@@ -7,6 +7,7 @@ import Swal from 'sweetalert2';
 
 import { AuthService } from '../../core/services/auth.service';
 import { UserService } from '../../core/services/user.service';
+import { TasksService } from '../../core/services/tasks.service';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 
 @Component({
@@ -30,8 +31,13 @@ export class ProfileComponent implements OnInit {
   editMode = false;
   loading = false;
 
-  zoom = 1;
+  // ================= COUNTS =================
+  tasksCount = 0;
+  projectsCount = 0;
+  animateTasks = false;
+
   // ================= CROPPER =================
+  zoom = 1;
   imageChangedEvent: any = null;
   croppedImage: Blob | null = null;
   showCropper = false;
@@ -42,33 +48,53 @@ export class ProfileComponent implements OnInit {
 
   constructor(
     private authService: AuthService,
-    private userService: UserService,
+    public userService: UserService,
+    private taskService: TasksService,
   ) {}
 
   // ================= INIT =================
   ngOnInit(): void {
-    if (this.authService.user) {
-      this.user = { ...this.authService.user };
-      this.originalUser = { ...this.authService.user };
-    }
+    // USER
+    this.userService.getMe().subscribe((user: any) => {
+      this.user = {
+        ...user,
+        image: user.image?.startsWith('http')
+          ? user.image
+          : 'http://localhost:5000' + user.image,
+      };
+
+      this.originalUser = { ...this.user };
+    });
+
+    // 🔥 THIS IS THE IMPORTANT PART
+    this.taskService.getAll().subscribe((res: any) => {
+      console.log('🔥 API RESPONSE:', res);
+
+      const tasks = Array.isArray(res) ? res : res.tasks;
+
+      this.taskService.setTasks(tasks || []);
+    });
+
+    // REALTIME COUNT
+    this.taskService.tasks$.subscribe((tasks) => {
+      this.tasksCount = tasks.length;
+
+      this.animateTasks = true;
+      setTimeout(() => (this.animateTasks = false), 300);
+    });
   }
 
-  // ================= SELECT IMAGE =================
+  // ================= IMAGE SELECT =================
   onFileSelected(event: any): void {
-    console.log('FILE SELECTED 📸');
-
     this.imageChangedEvent = event;
     this.showCropper = true;
 
-    this.transform = { scale: 1 }; // reset zoom
+    this.transform = { scale: 1 };
     this.croppedImage = null;
   }
 
   // ================= IMAGE LOADED =================
   imageLoaded(): void {
-    console.log('IMAGE LOADED ✅');
-
-    // مهم ليشتغل cropper صح
     setTimeout(() => {
       this.transform = { scale: 1.01 };
     }, 50);
@@ -79,7 +105,7 @@ export class ProfileComponent implements OnInit {
     if (event.blob) {
       this.croppedImage = event.blob;
 
-      // 🔥 preview مباشر مثل React
+      // preview instantly
       this.user.image = URL.createObjectURL(event.blob);
     }
   }
@@ -93,24 +119,17 @@ export class ProfileComponent implements OnInit {
       scale: value,
     };
 
-    // 🔥 add this (for slider progress fill)
     const percent = ((value - 1) / (3 - 1)) * 100;
     event.target.style.setProperty('--value', percent + '%');
   }
 
   // ================= SAVE CROPPED IMAGE =================
   saveCropped(): void {
-    console.log('CLICK APPLY 🚀', this.croppedImage);
-
     if (!this.croppedImage) {
-      console.log('❌ NO IMAGE');
-
       Swal.fire({
         icon: 'error',
         title: 'Image not ready',
-        text: 'Please move or zoom the image first',
       });
-
       return;
     }
 
@@ -121,10 +140,14 @@ export class ProfileComponent implements OnInit {
 
     this.userService.uploadImage(formData).subscribe({
       next: (res: any) => {
-        console.log('UPLOAD SUCCESS ✅', res);
+        // ✅ preview update
+        this.user.image =
+          'http://localhost:5000' + res.imageUrl + '?t=' + Date.now();
 
-        this.user.image = res.imageUrl + '?t=' + Date.now();
-        localStorage.setItem('user', JSON.stringify(this.user));
+        // ✅ update global user
+        this.userService.getMe().subscribe((user) => {
+          this.userService.setUser(user);
+        });
 
         this.resetCropper();
         this.loading = false;
@@ -138,9 +161,7 @@ export class ProfileComponent implements OnInit {
           showConfirmButton: false,
         });
       },
-      error: (err) => {
-        console.log('UPLOAD ERROR ❌', err);
-
+      error: () => {
         this.loading = false;
 
         Swal.fire({
@@ -165,7 +186,6 @@ export class ProfileComponent implements OnInit {
 
     this.userService.updateProfile(this.user).subscribe({
       next: (res: any) => {
-        console.log(res); // 👈 حطها
         this.user = res;
         this.originalUser = { ...res };
 
@@ -200,6 +220,7 @@ export class ProfileComponent implements OnInit {
     this.editMode = false;
   }
 
+  // ================= UTIL =================
   copyEmail(email: string) {
     if (!email) return;
 

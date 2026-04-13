@@ -145,7 +145,7 @@
       <!-- ROWS -->
       <div
         class="trow"
-        *ngFor="let t of pagedTasks; trackBy: trackByTask"
+        *ngFor="let t of pagedTasks; trackBy: trackById"
         [class.removing]="t?.removing"
         (click)="openDetails(t)"
       >
