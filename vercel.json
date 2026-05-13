@@ -1,6 +1,6 @@
 {
   "buildCommand": "ng build",
-  "outputDirectory": "dist/task-m",
+  "outputDirectory": "dist/task-m/browser",
   "rewrites": [
     {
       "source": "/(.*)",
