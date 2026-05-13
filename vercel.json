@@ -1,4 +1,10 @@
 {
   "buildCommand": "ng build",
-  "outputDirectory": "dist/task-m"
+  "outputDirectory": "dist/task-m",
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "/"
+    }
+  ]
 }
