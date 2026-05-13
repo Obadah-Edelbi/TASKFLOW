@@ -1,10 +1,8 @@
 {
-  "buildCommand": "ng build",
-  "outputDirectory": "dist/task-m",
-  "rewrites": [
+  "routes": [
     {
-      "source": "/(.*)",
-      "destination": "/"
+      "src": "/(.*)",
+      "dest": "/index.html"
     }
   ]
 }
