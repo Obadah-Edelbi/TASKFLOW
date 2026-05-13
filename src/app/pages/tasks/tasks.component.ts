@@ -82,8 +82,10 @@ export class TasksComponent implements OnInit {
 
   private listenToNotifications(): void {
     this.notificationService.onNotification((data: NotificationPayload) => {
+      console.log('notification', data);
       if (data.type === 'TASK_UPDATED' && data.taskId && data.status) {
         this.updateTaskStatus(data.taskId, data.status);
+        this.tasks = [...this.tasks];
       }
 
       if (data.type === 'NEW_MESSAGE') {
@@ -262,6 +264,8 @@ export class TasksComponent implements OnInit {
     if (!task) return;
 
     task.status = status;
+
+    this.tasks = [...this.tasks];
     this.applyFilters();
   }
 
@@ -325,19 +329,20 @@ export class TasksComponent implements OnInit {
   }
 
   /* ================= STATS ================= */
-  get totalTasks(): number {
-    return this.tasks.length;
+
+  get highPriorityCount(): number {
+    return this.tasks.filter((task) => task.priority === 'high').length;
   }
 
-  get inProgressCount(): number {
-    return this.tasks.filter((task) => task.status === 'in_progress').length;
+  get mediumPriorityCount(): number {
+    return this.tasks.filter((task) => task.priority === 'medium').length;
+  }
+
+  get lowPriorityCount(): number {
+    return this.tasks.filter((task) => task.priority === 'low').length;
   }
 
   get completedCount(): number {
     return this.tasks.filter((task) => task.status === 'resolved').length;
-  }
-
-  get highPriorityCount(): number {
-    return this.tasks.filter((task) => task.priority === 'high').length;
   }
 }

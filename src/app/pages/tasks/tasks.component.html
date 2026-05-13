@@ -16,43 +16,51 @@
 
   <!-- ================= STATS ================= -->
   <div class="stats">
+    <!-- HIGH -->
     <div class="stat-card">
-      <div class="stat-icon total">
-        <mat-icon>assignment</mat-icon>
+      <div class="stat-icon rejected">
+        <mat-icon>priority_high</mat-icon>
       </div>
+
       <div class="stat-text">
-        <span>Total Tasks</span>
-        <h2>{{ totalTasks }}</h2>
+        <span>High Priority</span>
+        <h2>{{ highPriorityCount }}</h2>
       </div>
     </div>
 
+    <!-- MEDIUM -->
     <div class="stat-card">
       <div class="stat-icon progress">
-        <mat-icon>schedule</mat-icon>
+        <mat-icon>remove</mat-icon>
       </div>
+
       <div class="stat-text">
-        <span>In Progress</span>
-        <h2>{{ inProgressCount }}</h2>
+        <span>Medium Priority</span>
+        <h2>{{ mediumPriorityCount }}</h2>
       </div>
     </div>
 
+    <!-- LOW -->
+    <div class="stat-card">
+      <div class="stat-icon total">
+        <mat-icon>keyboard_arrow_down</mat-icon>
+      </div>
+
+      <div class="stat-text">
+        <span>Low Priority</span>
+        <h2>{{ lowPriorityCount }}</h2>
+      </div>
+    </div>
+
+    <!-- COMPLETED -->
     <div class="stat-card">
       <div class="stat-icon resolved">
         <mat-icon>check_circle</mat-icon>
       </div>
-      <div class="stat-text">
-        <span>Resolved</span>
-        <h2>{{ completedCount }}</h2>
-      </div>
-    </div>
 
-    <div class="stat-card">
-      <div class="stat-icon rejected">
-        <mat-icon>error</mat-icon>
-      </div>
       <div class="stat-text">
-        <span>High Priority</span>
-        <h2>{{ highPriorityCount }}</h2>
+        <span>Completed Tasks</span>
+        <h2>{{ completedCount }}</h2>
       </div>
     </div>
   </div>
