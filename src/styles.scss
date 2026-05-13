@@ -39,6 +39,7 @@ body.dark {
   --text: #f1f5f9;
   --text-muted: #94a3b8;
   --accent: #f97316;
+  --border-color: rgba(255, 255, 255, 0.06);
 }
 
 /* =========================
@@ -406,4 +407,15 @@ body.dark .swal2-html-container {
     animation: none !important;
     transition: none !important;
   }
+}
+/* LIGHT */
+:root {
+  --background-start: #f8fafc;
+  --background-end: #e2e8f0;
+}
+
+/* DARK */
+body.dark {
+  --background-start: #0f172a;
+  --background-end: #020617;
 }

@@ -1,50 +1,58 @@
-<form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="auth-form">
-  <h2>Login</h2>
-
-  <!-- Email -->
-  <mat-form-field appearance="fill" class="full-width underline-field">
-    <mat-label>Email</mat-label>
-    <input matInput type="email" formControlName="email" autocomplete="email" />
-
-    <mat-error *ngIf="loginForm.get('email')?.hasError('required')">
-      Email is required
-    </mat-error>
-
-    <mat-error *ngIf="loginForm.get('email')?.hasError('email')">
-      Enter a valid email
-    </mat-error>
-  </mat-form-field>
-
-  <!-- Password -->
-  <mat-form-field appearance="fill" class="full-width underline-field">
-    <mat-label>Password</mat-label>
-    <input
-      matInput
-      type="password"
-      formControlName="password"
-      autocomplete="current-password"
-    />
-    <mat-error *ngIf="loginForm.get('password')?.hasError('required')">
-      Password is required
-    </mat-error>
-  </mat-form-field>
-
-  <!-- Login Button -->
-  <button
-    mat-raised-button
-    type="submit"
-    class="submit-btn full-width"
-    [disabled]="loginForm.invalid"
-  >
-    Login
-  </button>
-
-  <!-- Links -->
-  <div class="auth-link">
-    <span>Already have an account?</span>
-    <a routerLink="/register"> Register</a>
+<div class="register-container">
+  <!-- LEFT SIDE -->
+  <div class="left-side">
+    <div class="welcome-text">
+      <h1>Welcome to TaskFlow</h1>
+      <p>
+        Organize your tasks, manage your workflow, and stay productive with a
+        modern dashboard designed for teams and individuals.
+      </p>
+    </div>
   </div>
-  <div class="auth-link">
-    <a routerLink="/forgot-password" class="auth-link"> Forgot password? </a>
+
+  <!-- RIGHT SIDE -->
+  <div class="right-side">
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="auth-form">
+      <h2>LOGIN</h2>
+
+      <!-- Email -->
+      <mat-form-field
+        appearance="fill"
+        class="full-width underline-field custom-field"
+      >
+        <mat-icon matPrefix>person</mat-icon>
+        <mat-label>Email</mat-label>
+        <input matInput type="email" formControlName="email" />
+      </mat-form-field>
+
+      <!-- Password -->
+      <mat-form-field
+        appearance="fill"
+        class="full-width underline-field custom-field"
+      >
+        <mat-icon matPrefix>lock</mat-icon>
+        <mat-label>Password</mat-label>
+        <input matInput type="password" formControlName="password" />
+      </mat-form-field>
+
+      <div class="options-row">
+        <mat-checkbox formControlName="remember">Remember</mat-checkbox>
+        <a class="forgot-link" routerLink="/forgot">Forgot password?</a>
+      </div>
+
+      <button
+        mat-raised-button
+        type="submit"
+        class="submit-btn"
+        [disabled]="loginForm.invalid"
+      >
+        LOGIN
+      </button>
+
+      <div class="auth-link">
+        <span>Don't have an account?</span>
+        <a routerLink="/register"> Register</a>
+      </div>
+    </form>
   </div>
-</form>
+</div>

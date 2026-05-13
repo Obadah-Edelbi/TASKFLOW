@@ -13,6 +13,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { CommonModule } from '@angular/common';
+import { MatIconModule } from '@angular/material/icon';
 
 function passwordMatchValidator(
   control: AbstractControl,
@@ -36,6 +37,7 @@ function passwordMatchValidator(
     MatInputModule,
     MatButtonModule,
     CommonModule,
+    MatIconModule,
   ],
   providers: [FormBuilder],
   templateUrl: './register.component.html',

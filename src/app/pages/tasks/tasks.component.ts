@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { Task } from '../../core/models/task.model';
@@ -52,6 +52,7 @@ interface NotificationPayload {
   ],
   templateUrl: './tasks.component.html',
   styleUrl: './tasks.component.scss',
+  encapsulation: ViewEncapsulation.None,
 })
 export class TasksComponent implements OnInit {
   loading = false;

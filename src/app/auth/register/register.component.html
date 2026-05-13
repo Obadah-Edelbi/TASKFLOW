@@ -1,80 +1,73 @@
-<form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="auth-form">
-  <h2>Register</h2>
-
-  <!-- Name -->
-  <mat-form-field appearance="fill" class="full-width underline-field">
-    <mat-label>Name</mat-label>
-    <input matInput type="text" formControlName="name" />
-
-    <mat-error *ngIf="registerForm.get('name')?.hasError('required')">
-      Name is required
-    </mat-error>
-  </mat-form-field>
-
-  <!-- Email -->
-  <mat-form-field appearance="fill" class="full-width underline-field">
-    <mat-label>Email</mat-label>
-    <input matInput type="email" formControlName="email" />
-
-    <mat-error *ngIf="registerForm.get('email')?.hasError('required')">
-      Email is required
-    </mat-error>
-
-    <mat-error *ngIf="registerForm.get('email')?.hasError('email')">
-      Enter a valid email
-    </mat-error>
-  </mat-form-field>
-
-  <!-- Password -->
-  <mat-form-field appearance="fill" class="full-width underline-field">
-    <mat-label>Password</mat-label>
-    <input
-      matInput
-      type="password"
-      formControlName="password"
-      autocomplete="current-password"
-    />
-
-    <mat-error *ngIf="registerForm.get('password')?.hasError('required')">
-      Password is required
-    </mat-error>
-
-    <mat-error *ngIf="registerForm.get('password')?.hasError('minlength')">
-      Minimum 6 characters
-    </mat-error>
-  </mat-form-field>
-
-  <!-- Confirm Password -->
-  <mat-form-field appearance="fill" class="full-width underline-field">
-    <mat-label>Confirm Password</mat-label>
-    <input
-      matInput
-      type="password"
-      formControlName="confirmPassword"
-      autocomplete="current-password"
-    />
-
-    <mat-error
-      *ngIf="registerForm.get('confirmPassword')?.hasError('required')"
-    >
-      Confirm password is required
-    </mat-error>
-
-    <mat-error *ngIf="registerForm.hasError('passwordMismatch')">
-      Passwords do not match
-    </mat-error>
-  </mat-form-field>
-
-  <button
-    mat-raised-button
-    type="submit"
-    class="submit-btn full-width"
-    [disabled]="registerForm.invalid"
-  >
-    Register
-  </button>
-  <div class="auth-link">
-    <span>Already have an account?</span>
-    <a routerLink="/login"> Login</a>
+<div class="register-container">
+  <!-- LEFT SIDE -->
+  <div class="left-side">
+    <div class="welcome-text">
+      <h1>Welcome to TaskFlow</h1>
+      <p>
+        Organize your tasks, manage your workflow, and stay productive with a
+        modern dashboard designed for teams and individuals.
+      </p>
+    </div>
   </div>
-</form>
+
+  <!-- RIGHT SIDE -->
+  <div class="right-side">
+    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="auth-form">
+      <h2>Register</h2>
+
+      <!-- Name -->
+      <mat-form-field
+        appearance="fill"
+        class="full-width underline-field custom-field"
+      >
+        <mat-icon matPrefix>person</mat-icon>
+        <mat-label>Name</mat-label>
+        <input matInput type="text" formControlName="name" />
+      </mat-form-field>
+
+      <!-- Email -->
+      <mat-form-field
+        appearance="fill"
+        class="full-width underline-field custom-field"
+      >
+        <mat-icon matPrefix>email</mat-icon>
+        <mat-label>Email</mat-label>
+        <input matInput type="email" formControlName="email" />
+      </mat-form-field>
+
+      <!-- Password -->
+      <mat-form-field
+        appearance="fill"
+        class="full-width underline-field custom-field"
+      >
+        <mat-icon matPrefix>lock</mat-icon>
+        <mat-label>Password</mat-label>
+        <input matInput type="password" formControlName="password" />
+      </mat-form-field>
+
+      <!-- Confirm Password -->
+      <mat-form-field
+        appearance="fill"
+        class="full-width underline-field custom-field"
+      >
+        <mat-icon matPrefix>lock</mat-icon>
+        <mat-label>Confirm Password</mat-label>
+        <input matInput type="password" formControlName="confirmPassword" />
+      </mat-form-field>
+
+      <button
+        mat-raised-button
+        type="submit"
+        class="submit-btn"
+        [disabled]="registerForm.invalid"
+      >
+        Register
+      </button>
+
+      <div class="auth-link">
+        <span>Already have an account?</span>
+        <a routerLink="/login"> Login</a>
+      </div>
+    </form>
+  </div>
+</div>
