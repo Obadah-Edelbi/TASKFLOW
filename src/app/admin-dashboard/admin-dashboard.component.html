@@ -1,153 +1,196 @@
-<div class="wrap app-container">
-  <!-- ================= HERO ================= -->
+<div class="wrap">
+  <!-- HERO -->
   <div class="hero">
-    <div class="hero-left">
+    <div>
       <h1>Admin Dashboard</h1>
+
       <p>Manage all users tasks and monitor system activity.</p>
     </div>
   </div>
 
-  <!-- ================= SEARCH ================= -->
-  <div class="filters">
-    <div class="search">
-      <mat-icon>search</mat-icon>
-      <input
-        (input)="applyFilter($any($event.target).value)"
-        placeholder="Search by title or description..."
-      />
-    </div>
-  </div>
-
-  <!-- ================= STATS ================= -->
+  <!-- STATS -->
   <div class="stats">
-    <div class="stat">
-      <div class="stat-left">
-        <div class="ic blue">
-          <mat-icon>assignment</mat-icon>
-        </div>
-        <div class="text">
-          <div class="label">Total Tasks</div>
-          <div class="num">{{ stats.total }}</div>
-        </div>
+    <div class="stat-card">
+      <div class="stat-icon total">
+        <mat-icon>assignment</mat-icon>
+      </div>
+
+      <div class="stat-text">
+        <span>Total Tasks</span>
+
+        <h2>{{ stats.total }}</h2>
       </div>
     </div>
 
-    <div class="stat">
-      <div class="stat-left">
-        <div class="ic indigo">
-          <mat-icon>schedule</mat-icon>
-        </div>
-        <div class="text">
-          <div class="label">In Progress</div>
-          <div class="num">{{ stats.in_progress }}</div>
-        </div>
+    <div class="stat-card">
+      <div class="stat-icon progress">
+        <mat-icon>schedule</mat-icon>
+      </div>
+
+      <div class="stat-text">
+        <span>In Progress</span>
+
+        <h2>{{ stats.in_progress }}</h2>
       </div>
     </div>
 
-    <div class="stat">
-      <div class="stat-left">
-        <div class="ic green">
-          <mat-icon>check_circle</mat-icon>
-        </div>
-        <div class="text">
-          <div class="label">Resolved</div>
-          <div class="num">{{ stats.resolved }}</div>
-        </div>
+    <div class="stat-card">
+      <div class="stat-icon resolved">
+        <mat-icon>check_circle</mat-icon>
+      </div>
+
+      <div class="stat-text">
+        <span>Resolved</span>
+
+        <h2>{{ stats.resolved }}</h2>
       </div>
     </div>
 
-    <div class="stat">
-      <div class="stat-left">
-        <div class="ic red">
-          <mat-icon>warning</mat-icon>
-        </div>
-        <div class="text">
-          <div class="label">Rejected</div>
-          <div class="num">{{ stats.rejected }}</div>
-        </div>
+    <div class="stat-card">
+      <div class="stat-icon rejected">
+        <mat-icon>warning</mat-icon>
+      </div>
+
+      <div class="stat-text">
+        <span>Rejected</span>
+
+        <h2>{{ stats.rejected }}</h2>
       </div>
     </div>
   </div>
 
-  <!-- ================= TABLE ================= -->
-  <div class="card">
-    <!-- LOADING -->
-    <div class="loading" *ngIf="loading">
-      <div class="spin"></div>
-      <span>Loading tasks...</span>
-    </div>
+  <!-- CARD -->
+  <mat-card class="card">
+    <!-- FILTERS -->
+    <div class="filters">
+      <div class="search">
+        <mat-icon>search</mat-icon>
 
-    <!-- EMPTY -->
-    <div *ngIf="!loading && tasks.length === 0" class="empty-wrapper">
-      <div class="empty-card">
-        <div class="icon-wrapper">
-          <mat-icon>folder_off</mat-icon>
-        </div>
-
-        <h3>No tasks found</h3>
-        <p>No data matching your search</p>
+        <input
+          type="text"
+          placeholder="Search by title or description..."
+          (input)="applyFilter($any($event.target).value)"
+        />
       </div>
+
+      <button class="btn-icon" mat-icon-button>
+        <mat-icon>filter_list</mat-icon>
+      </button>
     </div>
 
     <!-- TABLE -->
-    <div class="table" *ngIf="!loading && tasks.length > 0">
+    <div class="table">
       <!-- HEADER -->
       <div class="thead">
-        <div class="left">Title</div>
-        <div>Status</div>
-        <div class="center">Priority</div>
-        <div>Created</div>
-        <div class="center">Actions</div>
+        <div>TITLE & DESCRIPTION</div>
+
+        <div>STATUS</div>
+
+        <div>PRIORITY</div>
+
+        <div>CREATED</div>
+
+        <div>ACTIONS</div>
       </div>
 
-      <!-- ROWS -->
-      <div class="trow" *ngFor="let t of tasks" (click)="openDetails(t)">
+      <!-- ROW -->
+      <div class="trow" *ngFor="let t of pagedTasks">
         <!-- TITLE -->
         <div class="td title">
           <div class="t1">{{ t.title }}</div>
+
           <div class="t2">{{ t.description }}</div>
         </div>
 
         <!-- STATUS -->
-        <div class="td center">
+        <div class="status-cell">
           <mat-form-field appearance="outline" class="status-select">
             <mat-select
               [value]="t.status"
-              (click)="$event.stopPropagation()"
               (selectionChange)="changeStatus(t, $event.value)"
             >
               <mat-option value="new">New</mat-option>
-              <mat-option value="in_progress">In Progress</mat-option>
-              <mat-option value="resolved">Resolved</mat-option>
-              <mat-option value="rejected">Rejected</mat-option>
+
+              <mat-option value="in_progress"> In Progress </mat-option>
+
+              <mat-option value="resolved"> Resolved </mat-option>
+
+              <mat-option value="rejected"> Rejected </mat-option>
             </mat-select>
           </mat-form-field>
         </div>
 
         <!-- PRIORITY -->
-        <div class="td center">
-          <div class="prio" [ngClass]="'p-' + t.priority">
+        <div>
+          <div
+            class="prio"
+            [ngClass]="{
+              'p-low': t.priority === 'low',
+              'p-medium': t.priority === 'medium',
+              'p-high': t.priority === 'high',
+            }"
+          >
             <span class="dot"></span>
-            <span>{{ t.priority }}</span>
+
+            {{ t.priority | uppercase }}
           </div>
         </div>
 
-        <!-- CREATED -->
-        <div class="td dt">
+        <!-- DATE -->
+        <div class="dt">
           <span>{{ formatDate(t.createdAt) }}</span>
+
           <small>{{ formatTime(t.createdAt) }}</small>
         </div>
 
         <!-- ACTIONS -->
-        <div class="td center">
-          <button
-            mat-icon-button
-            (click)="deleteTask(t); $event.stopPropagation()"
-          >
+        <div class="row-actions">
+          <button mat-icon-button (click)="deleteTask(t)">
             <mat-icon>delete</mat-icon>
           </button>
         </div>
       </div>
+
+      <!-- EMPTY -->
+      <div class="empty-state" *ngIf="!pagedTasks.length">
+        <mat-icon>folder_off</mat-icon>
+
+        <h3>No tasks found</h3>
+
+        <p>No tasks available right now.</p>
+      </div>
+
+      <!-- FOOTER -->
+      <div class="tfoot">
+        <div>Showing {{ filteredTasks.length }} results</div>
+
+        <div class="pager">
+          <button
+            class="pbtn"
+            (click)="prevPage()"
+            [disabled]="pageIndex === 0"
+          >
+            Previous
+          </button>
+
+          <button
+            *ngFor="let p of pages"
+            class="pnum"
+            [class.active]="p === pageIndex"
+            (click)="goToPage(p)"
+          >
+            {{ p + 1 }}
+          </button>
+
+          <button
+            class="pbtn"
+            (click)="nextPage()"
+            [disabled]="pageIndex >= totalPages - 1"
+          >
+            Next
+          </button>
+        </div>
+      </div>
     </div>
-  </div>
+  </mat-card>
 </div>

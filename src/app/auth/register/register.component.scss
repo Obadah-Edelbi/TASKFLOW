@@ -228,3 +228,17 @@ body.light {
   --input-bg: #f8fafc;
   --border: rgba(0, 0, 0, 0.08);
 }
+/* Dark mode */
+.register-container .welcome-text h1 {
+  color: white;
+}
+
+/* Light mode */
+body:not(.dark) .register-container .welcome-text h1 {
+  color: black;
+}
+
+/* الفقرة تحت العنوان */
+body:not(.dark) .register-container .welcome-text p {
+  color: #333; /* أو أي لون مناسب للنص */
+}

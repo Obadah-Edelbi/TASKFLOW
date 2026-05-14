@@ -1,8 +1,11 @@
-<div class="register-container">
+<div class="login-container">
   <!-- LEFT SIDE -->
   <div class="left-side">
+    <div class="overlay"></div>
+
     <div class="welcome-text">
       <h1>Welcome to TaskFlow</h1>
+
       <p>
         Organize your tasks, manage your workflow, and stay productive with a
         modern dashboard designed for teams and individuals.
@@ -12,34 +15,48 @@
 
   <!-- RIGHT SIDE -->
   <div class="right-side">
-    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="auth-form">
+    <form
+      [formGroup]="loginForm"
+      (ngSubmit)="onSubmit()"
+      class="auth-form"
+      autocomplete="off"
+    >
       <h2>LOGIN</h2>
 
-      <!-- Email -->
-      <mat-form-field
-        appearance="fill"
-        class="full-width underline-field custom-field"
-      >
-        <mat-icon matPrefix>person</mat-icon>
-        <mat-label>Email</mat-label>
-        <input matInput type="email" formControlName="email" />
-      </mat-form-field>
+      <!-- EMAIL -->
+      <div class="custom-input">
+        <mat-icon>person</mat-icon>
 
-      <!-- Password -->
-      <mat-form-field
-        appearance="fill"
-        class="full-width underline-field custom-field"
-      >
-        <mat-icon matPrefix>lock</mat-icon>
-        <mat-label>Password</mat-label>
-        <input matInput type="password" formControlName="password" />
-      </mat-form-field>
-
-      <div class="options-row">
-        <mat-checkbox formControlName="remember">Remember</mat-checkbox>
-        <a class="forgot-link" routerLink="/forgot">Forgot password?</a>
+        <input
+          type="email"
+          formControlName="email"
+          placeholder="Email"
+          autocomplete="email"
+          name="email"
+        />
       </div>
 
+      <!-- PASSWORD -->
+      <div class="custom-input">
+        <mat-icon>lock</mat-icon>
+
+        <input
+          type="password"
+          formControlName="password"
+          placeholder="Password"
+          autocomplete="current-password"
+          name="password"
+        />
+      </div>
+
+      <!-- OPTIONS -->
+      <div class="options-row">
+        <mat-checkbox formControlName="remember"> Remember </mat-checkbox>
+
+        <a routerLink="/forgot" class="forgot-link"> Forgot password? </a>
+      </div>
+
+      <!-- BUTTON -->
       <button
         mat-raised-button
         type="submit"
@@ -49,8 +66,10 @@
         LOGIN
       </button>
 
+      <!-- LINK -->
       <div class="auth-link">
         <span>Don't have an account?</span>
+
         <a routerLink="/register"> Register</a>
       </div>
     </form>

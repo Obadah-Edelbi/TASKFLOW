@@ -14,8 +14,6 @@
   --info: #6366f1;
 
   --bg: #f8fafc;
-  --bg-gradient: linear-gradient(180deg, #f8fafc 0%, #eef2f7 100%);
-
   --card: #ffffff;
   --card-hover: #f3f4f6;
   --border: #e5e7eb;
@@ -29,21 +27,23 @@
   --shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
 }
 
-/* DARK */
+/* =========================
+   DARK MODE VARIABLES
+========================= */
 body.dark {
   --bg: #0b1220;
-  --bg-gradient: linear-gradient(180deg, #0b1220 0%, #0f172a 100%);
   --card: #1e293b;
   --card-hover: #334155;
   --border: rgba(255, 255, 255, 0.08);
+
   --text: #f1f5f9;
   --text-muted: #94a3b8;
+
   --accent: #f97316;
-  --border-color: rgba(255, 255, 255, 0.06);
 }
 
 /* =========================
-   BASE
+   RESET
 ========================= */
 *,
 *::before,
@@ -59,51 +59,34 @@ app-root {
   min-height: 100%;
 }
 
+/* =========================
+   GLOBAL BACKGROUND
+========================= */
 body {
   position: relative;
+
   overflow-x: hidden;
-  font-family: "Inter", sans-serif;
-  line-height: 1.5;
+
+  font-family: "Poppins", sans-serif;
+
   color: var(--text);
-  background:
-    radial-gradient(
-      circle at 20% 20%,
-      rgba(255, 120, 0, 0.12),
-      transparent 40%
-    ),
-    radial-gradient(
-      circle at 80% 30%,
-      rgba(59, 130, 246, 0.12),
-      transparent 40%
-    ),
-    radial-gradient(
-      circle at 50% 80%,
-      rgba(34, 197, 94, 0.08),
-      transparent 40%
-    ),
-    linear-gradient(180deg, #0b1220 0%, #0f172a 100%);
+
+  background-image: url("/assets/light-bg.png");
+
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
   background-attachment: fixed;
+
+  transition:
+    background-image 0.3s ease,
+    background-color 0.3s ease,
+    color 0.3s ease;
 }
 
-body:not(.dark) {
-  background:
-    radial-gradient(
-      circle at 15% 20%,
-      rgba(255, 120, 0, 0.08),
-      transparent 40%
-    ),
-    radial-gradient(
-      circle at 85% 25%,
-      rgba(59, 130, 246, 0.08),
-      transparent 40%
-    ),
-    radial-gradient(
-      circle at 50% 90%,
-      rgba(34, 197, 94, 0.06),
-      transparent 50%
-    ),
-    linear-gradient(180deg, #f8fafc 0%, #eef2f7 100%);
-  background-attachment: fixed;
+/* DARK MODE BACKGROUND */
+body.dark {
+  background-image: url("/assets/dark-bg.png");
 }
 
 app-root {
@@ -129,17 +112,20 @@ h4,
 h5,
 h6 {
   margin: 0;
+
   line-height: 1.2;
+
   color: var(--text);
 }
 
 p {
   margin: 0;
+
   color: var(--text-muted);
 }
 
 /* =========================
-   SAFE GLOBAL FORM STYLES
+   SAFE FORM STYLES
 ========================= */
 input:not(.mat-mdc-input-element),
 textarea:not(.mat-mdc-input-element),
@@ -153,7 +139,7 @@ textarea:not(.mat-mdc-input-element) {
 }
 
 /* =========================
-   MATERIAL INPUT
+   MATERIAL INPUTS
 ========================= */
 .mat-mdc-input-element {
   color: var(--text) !important;
@@ -174,7 +160,9 @@ textarea:not(.mat-mdc-input-element) {
 ========================= */
 .mat-mdc-raised-button {
   background: var(--accent) !important;
+
   color: var(--button-text) !important;
+
   border-radius: 12px !important;
 }
 
@@ -211,6 +199,7 @@ input:focus-visible,
 textarea:focus-visible,
 select:focus-visible {
   outline: 2px solid var(--accent);
+
   outline-offset: 2px;
 }
 
@@ -223,8 +212,11 @@ button:active {
 ========================= */
 .cdk-overlay-pane.modern-dialog .mdc-dialog__surface {
   background: var(--card) !important;
+
   color: var(--text) !important;
+
   border-radius: 16px !important;
+
   padding: 24px !important;
 }
 
@@ -241,11 +233,13 @@ button:active {
 ========================= */
 body:not(.dark) .mat-mdc-select-panel {
   background: #ffffff !important;
+
   color: #1e293b !important;
 }
 
 body.dark .mat-mdc-select-panel {
   background: var(--card) !important;
+
   color: var(--text) !important;
 }
 
@@ -279,11 +273,13 @@ body.dark .mat-mdc-option:hover {
 }
 
 /* =========================
-   SWEETALERT DARK
+   SWEETALERT
 ========================= */
 body.dark .swal2-popup {
   background: #1f2937 !important;
+
   color: #f9fafb !important;
+
   border-radius: 16px;
 }
 
@@ -301,21 +297,27 @@ body.dark .swal2-html-container {
 .app-container {
   width: 100%;
   max-width: var(--app-width);
+
   margin: 0 auto;
+
   padding-left: var(--app-padding);
   padding-right: var(--app-padding);
 }
 
 .page-shell {
   width: 100%;
+
   padding-top: 24px;
   padding-bottom: 24px;
 }
 
 .section-card {
   background: var(--card);
+
   border: 1px solid var(--border);
+
   border-radius: var(--radius);
+
   box-shadow: var(--shadow);
 }
 
@@ -391,6 +393,7 @@ body.dark .swal2-html-container {
 
 ::-webkit-scrollbar-thumb {
   background: rgba(120, 120, 120, 0.35);
+
   border-radius: 999px;
 }
 
@@ -402,20 +405,82 @@ body.dark .swal2-html-container {
   background: rgba(249, 115, 22, 0.25);
 }
 
+/* =========================
+   REDUCED MOTION
+========================= */
 @media (prefers-reduced-motion: reduce) {
   * {
     animation: none !important;
     transition: none !important;
   }
 }
-/* LIGHT */
-:root {
-  --background-start: #f8fafc;
-  --background-end: #e2e8f0;
+/* ==========================================
+   DARK MODE TABLE FIX ONLY
+========================================== */
+
+body.dark .card {
+  background: rgba(15, 23, 42, 0.82) !important;
 }
 
-/* DARK */
-body.dark {
-  --background-start: #0f172a;
-  --background-end: #020617;
+/* MATERIAL FIELD */
+:host-context(body.dark) ::ng-deep .mat-mdc-text-field-wrapper {
+  background: rgba(255, 255, 255, 0.04) !important;
+
+  border-radius: 14px !important;
+}
+
+/* REMOVE WHITE LAYER */
+:host-context(body.dark) ::ng-deep .mdc-text-field,
+:host-context(body.dark) ::ng-deep .mat-mdc-form-field-focus-overlay {
+  background: transparent !important;
+}
+
+/* SELECT TEXT */
+:host-context(body.dark) ::ng-deep .mat-mdc-select-value,
+:host-context(body.dark) ::ng-deep .mat-mdc-select-arrow,
+:host-context(body.dark) ::ng-deep .mat-mdc-select-min-line {
+  color: #f8fafc !important;
+}
+
+/* DROPDOWN PANEL */
+:host-context(body.dark) ::ng-deep .mat-mdc-select-panel {
+  background: #0f172a !important;
+}
+
+/* OPTIONS */
+:host-context(body.dark) ::ng-deep .mat-mdc-option {
+  color: #f8fafc !important;
+}
+
+:host-context(body.dark) ::ng-deep .mat-mdc-option:hover {
+  background: rgba(255, 255, 255, 0.08) !important;
+}
+/* SEARCH INPUT DARK */
+body.dark .search input {
+  background: transparent !important;
+
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+
+  box-shadow: none !important;
+}
+
+/* FILTER BUTTON DARK */
+body.dark .btn-icon {
+  background: transparent !important;
+
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+}
+
+/* DELETE BUTTON DARK */
+body.dark button[mat-icon-button] {
+  background: transparent !important;
+
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+}
+
+/* STATUS SELECT DARK */
+:host-context(body.dark) ::ng-deep .mat-mdc-text-field-wrapper {
+  background: transparent !important;
+
+  box-shadow: none !important;
 }

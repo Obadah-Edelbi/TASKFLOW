@@ -108,20 +108,25 @@ export class TaskDetailsComponent implements OnInit {
         if (index !== -1) {
           this.comments[index] = {
             ...this.comments[index],
-            ...updated,
-            author:
-              updated.author || updated.addedBy || this.comments[index].author,
+
+            // ONLY update text
+            text: updated.text,
+
+            // keep old populated author
+            author: this.comments[index].author,
           };
         }
 
         this.comments = [...this.comments];
+
         this.editingCommentId = null;
+
         this.editText = '';
       },
+
       error: (err) => console.error('Update comment error:', err),
     });
   }
-
   deleteComment(id: string) {
     this.commentService.deleteComment(id).subscribe({
       next: () => {
